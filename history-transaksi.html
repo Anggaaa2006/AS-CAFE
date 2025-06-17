@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History Transaksi - AS CAFE</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/history-transaksi.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>AS CAFE</h1>
+            </div>
+            <nav>
+                <ul class="menu">
+                    <li><a href="index.html">Beranda</a></li>
+                    <li><a href="menu.html">Menu</a></li>
+                    <li><a href="artikel.html">Artikel</a></li>
+                    <li><a href="reservasi.html">Reservasi</a></li>
+                    <li><a href="tentang.html">Tentang Kami</a></li>
+                </ul>
+                <div class="nav-icons">
+                    <a href="keranjang.html" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></a>
+                    <a href="login.html" class="user-icon"><i class="fas fa-user"></i></a>
+                </div>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <section class="breadcrumb">
+        <div class="container">
+            <nav>
+                <a href="index.html">Beranda</a>
+                <span>/</span>
+                <span>History Transaksi</span>
+            </nav>
+        </div>
+    </section>
+
+    <!-- History Content -->
+    <section class="history-section">
+        <div class="container">
+            <div class="history-header">
+                <h1>History Transaksi</h1>
+                <div class="filter-controls">
+                    <select id="statusFilter">
+                        <option value="all">Semua Status</option>
+                        <option value="pending">Menunggu</option>
+                        <option value="confirmed">Dikonfirmasi</option>
+                        <option value="preparing">Diproses</option>
+                        <option value="ready">Siap</option>
+                        <option value="completed">Selesai</option>
+                        <option value="cancelled">Dibatalkan</option>
+                    </select>
+                    <input type="date" id="dateFilter" placeholder="Filter tanggal">
+                    <button id="searchBtn" class="btn btn-outline">
+                        <i class="fas fa-search"></i> Cari
+                    </button>
+                </div>
+            </div>
+
+            <div class="orders-container" id="ordersContainer">
+                <!-- Sample Orders -->
+                <div class="order-card" data-status="completed">
+                    <div class="order-header">
+                        <div class="order-info">
+                            <h3>Order #AS1234567890</h3>
+                            <span class="order-date">15 Mei 2025, 14:30</span>
+                        </div>
+                        <div class="order-status">
+                            <span class="status-badge completed">Selesai</span>
+                        </div>
+                    </div>
+                    
+                    <div class="order-items">
+                        <div class="order-item">
+                            <img src="assets/images/coffee1.jpg" alt="Kopi Signature">
+                            <div class="item-details">
+                                <h4>Kopi Signature</h4>
+                                <p>Large, Extra Shot</p>
+                                <span class="quantity">x2</span>
+                            </div>
+                            <div class="item-price">Rp 80.000</div>
+                        </div>
+                        <div class="order-item">
+                            <img src="assets/images/food1.jpg" alt="Pasta Carbonara">
+                            <div class="item-details">
+                                <h4>Pasta Carbonara</h4>
+                                <p>Extra Bacon</p>
+                                <span class="quantity">x1</span>
+                            </div>
+                            <div class="item-price">Rp 80.000</div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-summary">
+                        <div class="delivery-info">
+                            <i class="fas fa-store"></i>
+                            <span>Pickup - Sudah diambil</span>
+                        </div>
+                        <div class="payment-info">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Tunai</span>
+                        </div>
+                        <div class="total-amount">
+                            <strong>Total: Rp 187.000</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="order-actions">
+                        <button class="btn btn-outline" onclick="viewOrderDetail('AS1234567890')">
+                            <i class="fas fa-eye"></i> Detail
+                        </button>
+                        <button class="btn btn-primary" onclick="reorder('AS1234567890')">
+                            <i class="fas fa-redo"></i> Pesan Lagi
+                        </button>
+                        <button class="btn btn-secondary" onclick="downloadReceipt('AS1234567890')">
+                            <i class="fas fa-download"></i> Struk
+                        </button>
+                    </div>
+                </div>
+
+                <div class="order-card" data-status="preparing">
+                    <div class="order-header">
+                        <div class="order-info">
+                            <h3>Order #AS0987654321</h3>
+                            <span class="order-date">16 Mei 2025, 10:15</span>
+                        </div>
+                        <div class="order-status">
+                            <span class="status-badge preparing">Diproses</span>
+                        </div>
+                    </div>
+                    
+                    <div class="order-items">
+                        <div class="order-item">
+                            <img src="assets/images/coffee2.jpg" alt="Cappuccino">
+                            <div class="item-details">
+                                <h4>Cappuccino</h4>
+                                <p>Regular</p>
+                                <span class="quantity">x1</span>
+                            </div>
+                            <div class="item-price">Rp 35.000</div>
+                        </div>
+                        <div class="order-item">
+                            <img src="assets/images/dessert1.jpg" alt="Tiramisu">
+                            <div class="item-details">
+                                <h4>Tiramisu</h4>
+                                <p>-</p>
+                                <span class="quantity">x1</span>
+                            </div>
+                            <div class="item-price">Rp 45.000</div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-summary">
+                        <div class="delivery-info">
+                            <i class="fas fa-truck"></i>
+                            <span>Delivery - Jl. Sudirman No. 45</span>
+                        </div>
+                        <div class="payment-info">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>GoPay</span>
+                        </div>
+                        <div class="total-amount">
+                            <strong>Total: Rp 103.800</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="order-tracking">
+                        <div class="tracking-steps">
+                            <div class="tracking-step completed">
+                                <i class="fas fa-check"></i>
+                                <span>Pesanan Diterima</span>
+                            </div>
+                            <div class="tracking-step completed">
+                                <i class="fas fa-check"></i>
+                                <span>Pembayaran Dikonfirmasi</span>
+                            </div>
+                            <div class="tracking-step active">
+                                <i class="fas fa-clock"></i>
+                                <span>Sedang Diproses</span>
+                            </div>
+                            <div class="tracking-step">
+                                <i class="fas fa-truck"></i>
+                                <span>Dalam Perjalanan</span>
+                            </div>
+                            <div class="tracking-step">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Selesai</span>
+                            </div>
+                        </div>
+                        <div class="estimated-time">
+                            <i class="fas fa-clock"></i>
+                            <span>Estimasi: 25 menit lagi</span>
+                        </div>
+                    </div>
+                    
+                    <div class="order-actions">
+                        <button class="btn btn-outline" onclick="viewOrderDetail('AS0987654321')">
+                            <i class="fas fa-eye"></i> Detail
+                        </button>
+                        <button class="btn btn-danger" onclick="cancelOrder('AS0987654321')">
+                            <i class="fas fa-times"></i> Batalkan
+                        </button>
+                        <button class="btn btn-secondary" onclick="contactSupport('AS0987654321')">
+                            <i class="fas fa-headset"></i> Bantuan
+                        </button>
+                    </div>
+                </div>
+
+                <div class="order-card" data-status="pending">
+                    <div class="order-header">
+                        <div class="order-info">
+                            <h3>Order #AS1122334455</h3>
+                            <span class="order-date">16 Mei 2025, 15:45</span>
+                        </div>
+                        <div class="order-status">
+                            <span class="status-badge pending">Menunggu Pembayaran</span>
+                        </div>
+                    </div>
+                    
+                    <div class="order-items">
+                        <div class="order-item">
+                            <img src="assets/images/coffee3.jpg" alt="Latte">
+                            <div class="item-details">
+                                <h4>Latte</h4>
+                                <p>Large</p>
+                                <span class="quantity">x2</span>
+                            </div>
+                            <div class="item-price">Rp 80.000</div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-summary">
+                        <div class="delivery-info">
+                            <i class="fas fa-store"></i>
+                            <span>Pickup</span>
+                        </div>
+                        <div class="payment-info">
+                            <i class="fas fa-university"></i>
+                            <span>Transfer Bank</span>
+                        </div>
+                        <div class="total-amount">
+                            <strong>Total: Rp 93.800</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-reminder">
+                        <div class="reminder-content">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div>
+                                <strong>Menunggu Pembayaran</strong>
+                                <p>Silakan transfer ke rekening BCA: 1234567890 a.n AS CAFE</p>
+                                <small>Batas waktu: 23:45 (8 jam lagi)</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="order-actions">
+                        <button class="btn btn-primary" onclick="payNow('AS1122334455')">
+                            <i class="fas fa-credit-card"></i> Bayar Sekarang
+                        </button>
+                        <button class="btn btn-outline" onclick="viewOrderDetail('AS1122334455')">
+                            <i class="fas fa-eye"></i> Detail
+                        </button>
+                        <button class="btn btn-danger" onclick="cancelOrder('AS1122334455')">
+                            <i class="fas fa-times"></i> Batalkan
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-content">
+                    <i class="fas fa-receipt"></i>
+                    <h2>Belum Ada Transaksi</h2>
+                    <p>Anda belum memiliki riwayat transaksi. Mulai pesan sekarang!</p>
+                    <a href="menu.html" class="btn btn-primary">Mulai Pesan</a>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="pagination">
+                <button class="page-btn" disabled>Previous</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">Next</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>AS CAFE</h2>
+                    <p>Kafe Kekinian dengan Cita Rasa Premium</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h3>Menu</h3>
+                        <ul>
+                            <li><a href="menu.html">Semua Menu</a></li>
+                            <li><a href="menu.html#coffee">Kopi</a></li>
+                            <li><a href="menu.html#food">Makanan</a></li>
+                            <li><a href="menu.html#dessert">Dessert</a></li>
+                            <li><a href="menu.html#drinks">Minuman</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Informasi</h3>
+                        <ul>
+                            <li><a href="tentang.html">Tentang Kami</a></li>
+                            <li><a href="artikel.html">Artikel</a></li>
+                            <li><a href="karir.html">Karir</a></li>
+                            <li><a href="faq.html">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Layanan</h3>
+                        <ul>
+                            <li><a href="reservasi.html">Reservasi</a></li>
+                            <li><a href="delivery.html">Delivery</a></li>
+                            <li><a href="catering.html">Catering</a></li>
+                            <li><a href="event.html">Private Event</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 AS CAFE. All Rights Reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="privacy.html">Kebijakan Privasi</a>
+                    <a href="terms.html">Syarat & Ketentuan</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/history-transaksi.js"></script>
+</body>
+</html>

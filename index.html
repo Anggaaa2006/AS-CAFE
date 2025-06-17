@@ -1,114 +1,416 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title> AS CAFÉ</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AS CAFE - Kafe Kekinian dengan Cita Rasa Premium</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
-  <!-- Navbar -->
-  <header class="navbar">
-    <div class="logo"> AS CAFÉ</div>
-    <nav>
-      <a href="#">Menu</a>
-      <a href="#">Promo</a>
-      <a href="#">Lokasi</a>
-      <a href="#">Kontak</a>
-    </nav>
-    <button class="signup">Reservasi</button>
-  </header>
-
-  <!-- Hero -->
-  <section class="hero">
-    <h1>Nikmati Kopi Terbaik di Tengah Kota Surabaya</h1>
-    <p>AS CAFÉ menghadirkan cita rasa kopi lokal khas Indonesia dengan suasana nyaman dan modern. Temukan tempat ngopi favoritmu di sini.</p>
-    <button class="btn-dark">Pesan Sekarang</button>
-    <div class="browser-window">
-      <img src="assets/img/4.png" alt="Café view"class="block w-64 h-auto border border-red-500"  />
-    </div>
-    <blockquote>    
-      “Tempat ngopi paling cozy dan rasa kopinya juara!”
-      <span class="author">– Iraa, Pelanggan Setia</span>
-    </blockquote>
-  </section>
-
-  <!-- Fitur -->
-  <section class="features">
-    <h2>Kenapa Pilih  AS CAFÉ ?</h2>
-    <p class="subtitle">Lebih dari sekadar tempat ngopi, ini rumah kedua kamu.</p>
-    <div class="cards">
-        <div class="card">
-            <div class="card-img">
-              <img src="assets/img/5.png" alt="Kopi spesial" class="thumb-img" />
-            </div> 
-            <div class="card-body">
-              <h3>Kopi Spesialti</h3>
-              <a alt="..">Lihat Menu ›</a>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>AS CAFE</h1>
             </div>
-          </div>
-          
-          
-      <div class="card">
-        <div class="card-img">
-          <img src="assets/img/1.png" alt="Interior nyaman" />
+            <nav>
+                <ul class="menu">
+                    <li><a href="index.html" class="active">Beranda</a></li>
+                    <li><a href="menu.html">Menu</a></li>
+                    <li><a href="artikel.html">Artikel</a></li>
+                    <li><a href="reservasi.html">Reservasi</a></li>
+                    <li><a href="tentang.html">Tentang Kami</a></li>
+                </ul>
+                <div class="nav-icons">
+                    <a href="keranjang.html" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></a>
+                    <a href="login.html" class="user-icon"><i class="fas fa-user"></i></a>
+                </div>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
         </div>
-        <div class="card-body">
-          <h3>Suasana Nyaman</h3>
-          <a href="#">Lihat Galeri ›</a>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-img">
-          <img src="assets/img/3.png" alt="Barista profesional" />
-        </div>
-        <div class="card-body">
-          <h3>Barista Profesional</h3>
-          <a href="#">Temui Tim Kami ›</a>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-img">
-          <img src="assets/img/2.png" alt="Snack lezat" />
-        </div>
-        <div class="card-body">
-          <h3>Snack Lezat</h3>
-          <a href="#">Cek Menu ›</a>
-        </div>
-      </div>
-    </div>
-  </section>
+    </header>
 
-  <!-- Reservasi -->
-  <section class="trial">
-    <h4>Reservasi Meja Sekarang</h4>
-    <form class="trial-form">
-      <input type="text" placeholder="Nama Lengkap" required />
-      <input type="email" placeholder="Email" required />
-      <input type="text" placeholder="Jumlah Orang" required />
-      <button type="submit" class="btn-dark">Reservasi</button>
-    </form>
-  </section>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h2>Nikmati Kopi Premium dalam Suasana Nyaman</h2>
+            <p>Kafe kekinian dengan berbagai pilihan kopi single origin dan makanan lezat</p>
+            <div class="hero-buttons">
+                <a href="menu.html" class="btn btn-primary">Lihat Menu</a>
+                <a href="reservasi.html" class="btn btn-outline">Reservasi</a>
+            </div>
+        </div>
+    </section>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="footer-top">
-      <div class="footer-logo"> AS CAFÉ</div>
-      <nav>
-        <a href="#">Tentang</a>
-        <a href="#">Menu</a>
-        <a href="#">Hubungi Kami</a>
-      </nav>
-    </div>
-    <div class="footer-icons">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-    </div>
-    <p>© 2025 AS CAFÉ . Semua hak dilindungi.</p>
-  </footer>
+    <!-- Featured Products -->
+    <section class="featured-products">
+        <div class="container">
+            <h2 class="section-title">Menu Favorit</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="/placeholder.svg?height=200&width=300" alt="Cappuccino">
+                    </div>
+                    <div class="product-info">
+                        <h3>Cappuccino</h3>
+                        <p>Espresso dengan steamed milk dan foam yang lembut</p>
+                        <div class="product-price">Rp 28.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="/placeholder.svg?height=200&width=300" alt="Croissant">
+                    </div>
+                    <div class="product-info">
+                        <h3>Croissant</h3>
+                        <p>Croissant butter yang lembut dan berlapis</p>
+                        <div class="product-price">Rp 22.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="/placeholder.svg?height=200&width=300" alt="Cold Brew">
+                    </div>
+                    <div class="product-info">
+                        <h3>Cold Brew</h3>
+                        <p>Kopi yang diseduh dengan air dingin selama 12 jam</p>
+                        <div class="product-price">Rp 30.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="/placeholder.svg?height=200&width=300" alt="Sandwich">
+                    </div>
+                    <div class="product-info">
+                        <h3>Chicken Sandwich</h3>
+                        <p>Sandwich dengan daging ayam panggang dan sayuran segar</p>
+                        <div class="product-price">Rp 35.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+            </div>
+            <div class="view-all">
+                <a href="menu.html" class="btn btn-secondary">Lihat Semua Menu</a>
+            </div>
+        </div>
+    </section>
 
+    <!-- About Section -->
+    <section class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-image">
+                    <img src="/placeholder.svg?height=400&width=600" alt="AS CAFE Interior">
+                </div>
+                <div class="about-text">
+                    <h2>Tentang AS CAFE</h2>
+                    <p>AS CAFE didirikan pada tahun 2020 dengan visi menyajikan kopi berkualitas premium dalam suasana yang nyaman dan modern. Kami memilih biji kopi terbaik dari berbagai daerah di Indonesia dan menyeduhnya dengan teknik yang presisi.</p>
+                    <p>Selain kopi, kami juga menyajikan berbagai makanan dan pastry yang dibuat fresh setiap hari. Kafe kami dirancang untuk menjadi tempat yang nyaman untuk bekerja, bertemu teman, atau sekadar menikmati waktu sendiri.</p>
+                    <a href="tentang.html" class="btn btn-primary">Pelajari Lebih Lanjut</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Articles Section -->
+    <section class="articles">
+        <div class="container">
+            <h2 class="section-title">Artikel Terbaru</h2>
+            <div class="articles-grid">
+                <div class="article-card">
+                    <div class="article-image">
+                        <img src="/placeholder.svg?height=200&width=300" alt="Coffee Brewing">
+                    </div>
+                    <div class="article-info">
+                        <div class="article-date">12 Mei 2023</div>
+                        <h3>Cara Membuat Cold Brew Coffee di Rumah</h3>
+                        <p>Pelajari cara membuat cold brew coffee yang enak dan mudah di rumah dengan peralatan sederhana.</p>
+                        <a href="artikel-cold-brew.html" class="read-more">Baca Selengkapnya</a>
+                    </div>
+                </div>
+                <div class="article-card">
+                    <div class="article-image">
+                        <img src="/placeholder.svg?height=200&width=300" alt="Coffee Beans">
+                    </div>
+                    <div class="article-info">
+                        <div class="article-date">5 Mei 2023</div>
+                        <h3>Mengenal Berbagai Jenis Biji Kopi Single Origin</h3>
+                        <p>Perbedaan karakteristik dan rasa dari berbagai biji kopi single origin dari seluruh Indonesia.</p>
+                        <a href="artikel-detail.html" class="read-more">Baca Selengkapnya</a>
+                    </div>
+                </div>
+                <div class="article-card">
+                    <div class="article-image">
+                        <img src="/placeholder.svg?height=200&width=300" alt="Latte Art">
+                    </div>
+                    <div class="article-info">
+                        <div class="article-date">28 April 2023</div>
+                        <h3>Tips Dasar Membuat Latte Art untuk Pemula</h3>
+                        <p>Panduan langkah demi langkah untuk membuat latte art dasar yang bisa dipraktikkan di rumah.</p>
+                        <a href="artikel-detail.html" class="read-more">Baca Selengkapnya</a>
+                    </div>
+                </div>
+            </div>
+            <div class="view-all">
+                <a href="artikel.html" class="btn btn-secondary">Lihat Semua Artikel</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reservation Section -->
+    <section class="reservation">
+        <div class="container">
+            <div class="reservation-content">
+                <div class="reservation-text">
+                    <h2>Reservasi Meja</h2>
+                    <p>Reservasi meja untuk menikmati pengalaman bersantap yang nyaman di AS CAFE. Kami menyediakan area indoor dan outdoor yang cozy.</p>
+                </div>
+                <div class="reservation-form">
+                    <form id="reservationForm">
+                        <div class="form-group">
+                            <label for="name">Nama Lengkap</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Nomor Telepon</label>
+                                <input type="tel" id="phone" name="phone" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="date">Tanggal</label>
+                                <input type="date" id="date" name="date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="time">Waktu</label>
+                                <input type="time" id="time" name="time" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="guests">Jumlah Tamu</label>
+                                <input type="number" id="guests" name="guests" min="1" max="20" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="area">Area</label>
+                                <select id="area" name="area" required>
+                                    <option value="">Pilih Area</option>
+                                    <option value="indoor">Indoor</option>
+                                    <option value="outdoor">Outdoor</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="notes">Catatan Tambahan</label>
+                            <textarea id="notes" name="notes" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Buat Reservasi</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">Apa Kata Mereka</h2>
+            <div class="testimonials-slider">
+                <div class="testimonial">
+                    <div class="testimonial-content">
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p>"Kopi di AS CAFE adalah yang terbaik di kota ini! Saya selalu mampir untuk secangkir cappuccino sebelum bekerja. Suasananya juga sangat nyaman untuk meeting."</p>
+                        <div class="testimonial-author">
+                            <div class="author-image">
+                                <img src="/placeholder.svg?height=50&width=50" alt="Budi Santoso">
+                            </div>
+                            <div class="author-info">
+                                <h4>Budi Santoso</h4>
+                                <p>Marketing Executive</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-content">
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p>"Croissant di sini luar biasa enak! Selalu fresh dan renyah di luar, lembut di dalam. Cold brew-nya juga sangat recommended untuk pecinta kopi yang suka rasa bold."</p>
+                        <div class="testimonial-author">
+                            <div class="author-image">
+                                <img src="/placeholder.svg?height=50&width=50" alt="Siti Nuraini">
+                            </div>
+                            <div class="author-info">
+                                <h4>Siti Nuraini</h4>
+                                <p>Food Blogger</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-content">
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <p>"Tempat yang sempurna untuk bekerja remote. WiFi cepat, banyak stop kontak, dan kopi yang enak. Chicken sandwich-nya juga sangat mengenyangkan untuk makan siang."</p>
+                        <div class="testimonial-author">
+                            <div class="author-image">
+                                <img src="/placeholder.svg?height=50&width=50" alt="Andi Wijaya">
+                            </div>
+                            <div class="author-info">
+                                <h4>Andi Wijaya</h4>
+                                <p>Web Developer</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact">
+        <div class="container">
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h2>Hubungi Kami</h2>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <h3>Alamat</h3>
+                                <p>Jl. Tunjungan , Surabaya</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone-alt"></i>
+                            <div>
+                                <h3>Telepon</h3>
+                                <p>+62 21 1234 5678</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h3>Email</h3>
+                                <p>info@ascafe.com</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <h3>Jam Buka</h3>
+                                <p>Senin - Jumat: 08:00 - 22:00</p>
+                                <p>Sabtu - Minggu: 09:00 - 23:00</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="social-media">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="contact-map">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d832.0325478284205!2d112.73823787316782!3d-7.259486277931916!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7f95d6c265939%3A0x4d0c06ff7b7a8ec1!2sJl.%20Tunjungan%2C%20Surabaya%2C%20Jawa%20Timur!5e0!3m2!1sid!2sid!4v1748996476560!5m2!1sid!2sid" width="600" height="550" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter">
+        <div class="container">
+            <div class="newsletter-content">
+                <h2>Berlangganan Newsletter</h2>
+                <p>Dapatkan update terbaru tentang menu baru, promo, dan artikel menarik dari AS CAFE</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Masukkan email Anda" required>
+                    <button type="submit" class="btn btn-primary">Berlangganan</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>AS CAFE</h2>
+                    <p>Kafe Kekinian dengan Cita Rasa Premium</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h3>Menu</h3>
+                        <ul>
+                            <li><a href="menu.html">Semua Menu</a></li>
+                            <li><a href="menu.html#coffee">Kopi</a></li>
+                            <li><a href="menu.html#food">Makanan</a></li>
+                            <li><a href="menu.html#dessert">Dessert</a></li>
+                            <li><a href="menu.html#drinks">Minuman</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Informasi</h3>
+                        <ul>
+                            <li><a href="tentang.html">Tentang Kami</a></li>
+                            <li><a href="artikel.html">Artikel</a></li>
+                            <li><a href="karir.html">Karir</a></li>
+                            <li><a href="faq.html">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Layanan</h3>
+                        <ul>
+                            <li><a href="reservasi.html">Reservasi</a></li>
+                            <li><a href="delivery.html">Delivery</a></li>
+                            <li><a href="catering.html">Catering</a></li>
+                            <li><a href="event.html">Private Event</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 AS CAFE. All Rights Reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="privacy.html">Kebijakan Privasi</a>
+                    <a href="terms.html">Syarat & Ketentuan</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
 </body>
 </html>

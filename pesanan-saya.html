@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesanan Saya - AS CAFE</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/pesanan-saya.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>AS CAFE</h1>
+            </div>
+            <nav>
+                <ul class="menu">
+                    <li><a href="index.html">Beranda</a></li>
+                    <li><a href="menu.html">Menu</a></li>
+                    <li><a href="artikel.html">Artikel</a></li>
+                    <li><a href="reservasi.html">Reservasi</a></li>
+                    <li><a href="tentang.html">Tentang Kami</a></li>
+                </ul>
+                <div class="nav-icons">
+                    <a href="keranjang.html" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></a>
+                    <a href="pesanan-saya.html" class="user-icon active"><i class="fas fa-user"></i></a>
+                </div>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- User Dashboard -->
+    <section class="user-dashboard">
+        <div class="container">
+            <div class="dashboard-header">
+                <h1>Akun Saya</h1>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="user-details">
+                        <h3 id="userName">Guest User</h3>
+                        <p id="userEmail">guest@example.com</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-content">
+                <div class="dashboard-sidebar">
+                    <nav class="dashboard-nav">
+                        <ul>
+                            <li class="active">
+                                <a href="#orders" data-tab="orders">
+                                    <i class="fas fa-shopping-bag"></i>
+                                    <span>Pesanan Saya</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#reservations" data-tab="reservations">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>Reservasi</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#profile" data-tab="profile">
+                                    <i class="fas fa-user"></i>
+                                    <span>Profil</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#favorites" data-tab="favorites">
+                                    <i class="fas fa-heart"></i>
+                                    <span>Favorit</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="dashboard-main">
+                    <!-- Orders Tab -->
+                    <div class="tab-content active" id="orders">
+                        <div class="tab-header">
+                            <h2>Pesanan Saya</h2>
+                            <div class="order-filters">
+                                <select id="orderStatusFilter">
+                                    <option value="all">Semua Status</option>
+                                    <option value="pending">Menunggu Pembayaran</option>
+                                    <option value="confirmed">Dikonfirmasi</option>
+                                    <option value="preparing">Diproses</option>
+                                    <option value="ready">Siap Diambil</option>
+                                    <option value="completed">Selesai</option>
+                                    <option value="cancelled">Dibatalkan</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="orders-list" id="ordersList">
+                            <!-- Orders will be populated by JavaScript -->
+                        </div>
+
+                        <div class="empty-state" id="ordersEmpty" style="display: none;">
+                            <div class="empty-icon">
+                                <i class="fas fa-shopping-bag"></i>
+                            </div>
+                            <h3>Belum Ada Pesanan</h3>
+                            <p>Anda belum memiliki pesanan. Mulai pesan sekarang!</p>
+                            <a href="menu.html" class="btn btn-primary">Mulai Pesan</a>
+                        </div>
+                    </div>
+
+                    <!-- Reservations Tab -->
+                    <div class="tab-content" id="reservations">
+                        <div class="tab-header">
+                            <h2>Reservasi Saya</h2>
+                            <a href="reservasi.html" class="btn btn-primary">Buat Reservasi Baru</a>
+                        </div>
+
+                        <div class="reservations-list" id="reservationsList">
+                            <!-- Reservations will be populated by JavaScript -->
+                        </div>
+
+                        <div class="empty-state" id="reservationsEmpty" style="display: none;">
+                            <div class="empty-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <h3>Belum Ada Reservasi</h3>
+                            <p>Anda belum memiliki reservasi meja.</p>
+                            <a href="reservasi.html" class="btn btn-primary">Buat Reservasi</a>
+                        </div>
+                    </div>
+
+                    <!-- Profile Tab -->
+                    <div class="tab-content" id="profile">
+                        <div class="tab-header">
+                            <h2>Profil Saya</h2>
+                        </div>
+
+                        <div class="profile-form">
+                            <form id="profileForm">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="profileName">Nama Lengkap</label>
+                                        <input type="text" id="profileName" name="name" placeholder="Masukkan nama lengkap">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="profileEmail">Email</label>
+                                        <input type="email" id="profileEmail" name="email" placeholder="Masukkan email">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="profilePhone">Nomor Telepon</label>
+                                        <input type="tel" id="profilePhone" name="phone" placeholder="Masukkan nomor telepon">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="profileBirthdate">Tanggal Lahir</label>
+                                        <input type="date" id="profileBirthdate" name="birthdate">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="profileAddress">Alamat</label>
+                                    <textarea id="profileAddress" name="address" rows="3" placeholder="Masukkan alamat lengkap"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Favorites Tab -->
+                    <div class="tab-content" id="favorites">
+                        <div class="tab-header">
+                            <h2>Menu Favorit</h2>
+                        </div>
+
+                        <div class="favorites-grid" id="favoritesList">
+                            <!-- Favorites will be populated by JavaScript -->
+                        </div>
+
+                        <div class="empty-state" id="favoritesEmpty" style="display: none;">
+                            <div class="empty-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <h3>Belum Ada Favorit</h3>
+                            <p>Anda belum menambahkan menu favorit.</p>
+                            <a href="menu.html" class="btn btn-primary">Jelajahi Menu</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>AS CAFE</h2>
+                    <p>Kafe Kekinian dengan Cita Rasa Premium</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h3>Menu</h3>
+                        <ul>
+                            <li><a href="menu.html">Semua Menu</a></li>
+                            <li><a href="menu.html#coffee">Kopi</a></li>
+                            <li><a href="menu.html#food">Makanan</a></li>
+                            <li><a href="menu.html#dessert">Dessert</a></li>
+                            <li><a href="menu.html#drinks">Minuman</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Informasi</h3>
+                        <ul>
+                            <li><a href="tentang.html">Tentang Kami</a></li>
+                            <li><a href="artikel.html">Artikel</a></li>
+                            <li><a href="karir.html">Karir</a></li>
+                            <li><a href="faq.html">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Layanan</h3>
+                        <ul>
+                            <li><a href="reservasi.html">Reservasi</a></li>
+                            <li><a href="delivery.html">Delivery</a></li>
+                            <li><a href="catering.html">Catering</a></li>
+                            <li><a href="event.html">Private Event</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 AS CAFE. All Rights Reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="privacy.html">Kebijakan Privasi</a>
+                    <a href="terms.html">Syarat & Ketentuan</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/pesanan-saya.js"></script>
+</body>
+</html>

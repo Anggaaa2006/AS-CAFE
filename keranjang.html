@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keranjang Belanja - AS CAFE</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/keranjang.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>AS CAFE</h1>
+            </div>
+            <nav>
+                <ul class="menu">
+                    <li><a href="index.html">Beranda</a></li>
+                    <li><a href="menu.html">Menu</a></li>
+                    <li><a href="artikel.html">Artikel</a></li>
+                    <li><a href="reservasi.html">Reservasi</a></li>
+                    <li><a href="tentang.html">Tentang Kami</a></li>
+                </ul>
+                <div class="nav-icons">
+                    <a href="keranjang.html" class="cart-icon active"><i class="fas fa-shopping-cart"></i><span class="cart-count">3</span></a>
+                    <a href="login.html" class="user-icon"><i class="fas fa-user"></i></a>
+                </div>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <section class="breadcrumb">
+        <div class="container">
+            <nav>
+                <a href="index.html">Beranda</a>
+                <span>/</span>
+                <span>Keranjang Belanja</span>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Cart Content -->
+    <section class="cart-section">
+        <div class="container">
+            <h1>Keranjang Belanja</h1>
+            
+            <div class="cart-content">
+                <div class="cart-items">
+                    <div class="cart-item">
+                        <div class="item-image">
+                            <img src="assets/images/coffee1.jpg" alt="Kopi Signature">
+                        </div>
+                        <div class="item-details">
+                            <h3>Kopi Signature</h3>
+                            <p>Kopi pilihan dengan cita rasa khas AS CAFE</p>
+                            <div class="item-options">
+                                <label>
+                                    <input type="radio" name="size-1" value="regular" checked>
+                                    Regular
+                                </label>
+                                <label>
+                                    <input type="radio" name="size-1" value="large">
+                                    Large (+Rp 5.000)
+                                </label>
+                            </div>
+                        </div>
+                        <div class="item-quantity">
+                            <button class="qty-btn minus" data-action="decrease">-</button>
+                            <input type="number" value="2" min="1" class="qty-input">
+                            <button class="qty-btn plus" data-action="increase">+</button>
+                        </div>
+                        <div class="item-price">
+                            <span class="price">Rp 70.000</span>
+                        </div>
+                        <div class="item-remove">
+                            <button class="remove-btn"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="cart-item">
+                        <div class="item-image">
+                            <img src="assets/images/food1.jpg" alt="Pasta Carbonara">
+                        </div>
+                        <div class="item-details">
+                            <h3>Pasta Carbonara</h3>
+                            <p>Pasta dengan saus krim, telur, dan bacon</p>
+                            <div class="item-options">
+                                <label>
+                                    <input type="checkbox" name="extra-1" value="cheese">
+                                    Extra Cheese (+Rp 10.000)
+                                </label>
+                                <label>
+                                    <input type="checkbox" name="extra-1" value="bacon" checked>
+                                    Extra Bacon (+Rp 15.000)
+                                </label>
+                            </div>
+                        </div>
+                        <div class="item-quantity">
+                            <button class="qty-btn minus" data-action="decrease">-</button>
+                            <input type="number" value="1" min="1" class="qty-input">
+                            <button class="qty-btn plus" data-action="increase">+</button>
+                        </div>
+                        <div class="item-price">
+                            <span class="price">Rp 80.000</span>
+                        </div>
+                        <div class="item-remove">
+                            <button class="remove-btn"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="cart-item">
+                        <div class="item-image">
+                            <img src="assets/images/dessert1.jpg" alt="Tiramisu">
+                        </div>
+                        <div class="item-details">
+                            <h3>Tiramisu</h3>
+                            <p>Dessert Italia dengan lapisan kopi dan mascarpone</p>
+                        </div>
+                        <div class="item-quantity">
+                            <button class="qty-btn minus" data-action="decrease">-</button>
+                            <input type="number" value="1" min="1" class="qty-input">
+                            <button class="qty-btn plus" data-action="increase">+</button>
+                        </div>
+                        <div class="item-price">
+                            <span class="price">Rp 45.000</span>
+                        </div>
+                        <div class="item-remove">
+                            <button class="remove-btn"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cart-summary">
+                    <div class="summary-card">
+                        <h3>Ringkasan Pesanan</h3>
+                        
+                        <div class="summary-row">
+                            <span>Subtotal (4 item)</span>
+                            <span>Rp 195.000</span>
+                        </div>
+                        
+                        <div class="summary-row">
+                            <span>Biaya Layanan</span>
+                            <span>Rp 5.000</span>
+                        </div>
+                        
+                        <div class="summary-row">
+                            <span>PPN (11%)</span>
+                            <span>Rp 22.000</span>
+                        </div>
+                        
+                        <div class="summary-divider"></div>
+                        
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span>Rp 222.000</span>
+                        </div>
+
+                        <div class="promo-code">
+                            <input type="text" placeholder="Kode Promo" id="promoInput">
+                            <button type="button" id="applyPromo">Gunakan</button>
+                        </div>
+
+                        <div class="delivery-options">
+                            <h4>Pilih Pengiriman</h4>
+                            <label class="delivery-option">
+                                <input type="radio" name="delivery" value="pickup" checked>
+                                <span class="option-info">
+                                    <strong>Ambil di Tempat</strong>
+                                    <small>Gratis - Siap dalam 15-20 menit</small>
+                                </span>
+                            </label>
+                            <label class="delivery-option">
+                                <input type="radio" name="delivery" value="delivery">
+                                <span class="option-info">
+                                    <strong>Delivery</strong>
+                                    <small>Rp 15.000 - 30-45 menit</small>
+                                </span>
+                            </label>
+                        </div>
+
+                        <button class="checkout-btn">Lanjut ke Pembayaran</button>
+                        <a href="menu.html" class="continue-shopping">Lanjut Belanja</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty Cart State -->
+            <div class="empty-cart" style="display: none;">
+                <div class="empty-cart-content">
+                    <i class="fas fa-shopping-cart"></i>
+                    <h2>Keranjang Anda Kosong</h2>
+                    <p>Belum ada item di keranjang belanja Anda</p>
+                    <a href="menu.html" class="btn btn-primary">Mulai Belanja</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recommended Products -->
+    <section class="recommended-products">
+        <div class="container">
+            <h2>Mungkin Anda Suka</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="assets/images/coffee2.jpg" alt="Cappuccino">
+                    </div>
+                    <div class="product-info">
+                        <h3>Cappuccino</h3>
+                        <div class="product-price">Rp 35.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="assets/images/food2.jpg" alt="Chicken Sandwich">
+                    </div>
+                    <div class="product-info">
+                        <h3>Chicken Sandwich</h3>
+                        <div class="product-price">Rp 55.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="assets/images/dessert2.jpg" alt="Chocolate Lava Cake">
+                    </div>
+                    <div class="product-info">
+                        <h3>Chocolate Lava Cake</h3>
+                        <div class="product-price">Rp 48.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="assets/images/drink1.jpg" alt="Fresh Orange Juice">
+                    </div>
+                    <div class="product-info">
+                        <h3>Fresh Orange Juice</h3>
+                        <div class="product-price">Rp 30.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>AS CAFE</h2>
+                    <p>Kafe Kekinian dengan Cita Rasa Premium</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h3>Menu</h3>
+                        <ul>
+                            <li><a href="menu.html">Semua Menu</a></li>
+                            <li><a href="menu.html#coffee">Kopi</a></li>
+                            <li><a href="menu.html#food">Makanan</a></li>
+                            <li><a href="menu.html#dessert">Dessert</a></li>
+                            <li><a href="menu.html#drinks">Minuman</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Informasi</h3>
+                        <ul>
+                            <li><a href="tentang.html">Tentang Kami</a></li>
+                            <li><a href="artikel.html">Artikel</a></li>
+                            <li><a href="karir.html">Karir</a></li>
+                            <li><a href="faq.html">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Layanan</h3>
+                        <ul>
+                            <li><a href="reservasi.html">Reservasi</a></li>
+                            <li><a href="delivery.html">Delivery</a></li>
+                            <li><a href="catering.html">Catering</a></li>
+                            <li><a href="event.html">Private Event</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 AS CAFE. All Rights Reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="privacy.html">Kebijakan Privasi</a>
+                    <a href="terms.html">Syarat & Ketentuan</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/keranjang.js"></script>
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembayaran - AS CAFE</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/pembayaran.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>AS CAFE</h1>
+            </div>
+            <nav>
+                <ul class="menu">
+                    <li><a href="index.html">Beranda</a></li>
+                    <li><a href="menu.html">Menu</a></li>
+                    <li><a href="artikel.html">Artikel</a></li>
+                    <li><a href="reservasi.html">Reservasi</a></li>
+                    <li><a href="tentang.html">Tentang Kami</a></li>
+                </ul>
+                <div class="nav-icons">
+                    <a href="keranjang.html" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></a>
+                    <a href="login.html" class="user-icon"><i class="fas fa-user"></i></a>
+                </div>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <section class="breadcrumb">
+        <div class="container">
+            <nav>
+                <a href="index.html">Beranda</a>
+                <span>/</span>
+                <a href="keranjang.html">Keranjang</a>
+                <span>/</span>
+                <span>Pembayaran</span>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Checkout Steps -->
+    <section class="checkout-steps">
+        <div class="container">
+            <div class="steps">
+                <div class="step completed">
+                    <div class="step-number">1</div>
+                    <span>Keranjang</span>
+                </div>
+                <div class="step active">
+                    <div class="step-number">2</div>
+                    <span>Pembayaran</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <span>Konfirmasi</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Checkout Content -->
+    <section class="checkout-section">
+        <div class="container">
+            <div class="checkout-content">
+                <div class="checkout-form">
+                    <form id="checkoutForm">
+                        <!-- Customer Information -->
+                        <div class="form-section">
+                            <h2>Informasi Pelanggan</h2>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName">Nama Depan *</label>
+                                    <input type="text" id="firstName" name="firstName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Nama Belakang *</label>
+                                    <input type="text" id="lastName" name="lastName" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="email">Email *</label>
+                                    <input type="email" id="email" name="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">Nomor Telepon *</label>
+                                    <input type="tel" id="phone" name="phone" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Delivery Information -->
+                        <div class="form-section" id="deliverySection">
+                            <h2>Informasi Pengiriman</h2>
+                            <div class="form-group">
+                                <label for="address">Alamat Lengkap *</label>
+                                <textarea id="address" name="address" rows="3" placeholder="Masukkan alamat lengkap untuk pengiriman" required></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="city">Kota *</label>
+                                    <input type="text" id="city" name="city" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="postalCode">Kode Pos *</label>
+                                    <input type="text" id="postalCode" name="postalCode" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="notes">Catatan Pengiriman</label>
+                                <textarea id="notes" name="notes" rows="2" placeholder="Catatan tambahan untuk kurir (opsional)"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Pickup Information -->
+                        <div class="form-section" id="pickupSection" style="display: none;">
+                            <h2>Informasi Pickup</h2>
+                            <div class="pickup-info">
+                                <div class="pickup-location">
+                                    <h3>Lokasi Pickup</h3>
+                                    <p><i class="fas fa-map-marker-alt"></i> Jl. Kopi Nikmat No. 123, Jakarta Selatan</p>
+                                    <p><i class="fas fa-clock"></i> Buka Setiap Hari: 08.00 - 22.00</p>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pickupTime">Waktu Pickup *</label>
+                                    <select id="pickupTime" name="pickupTime" required>
+                                        <option value="">Pilih waktu pickup</option>
+                                        <option value="asap">Sesegera mungkin (15-20 menit)</option>
+                                        <option value="30min">30 menit</option>
+                                        <option value="1hour">1 jam</option>
+                                        <option value="2hour">2 jam</option>
+                                        <option value="custom">Waktu khusus</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" id="customTimeGroup" style="display: none;">
+                                    <label for="customTime">Waktu Khusus</label>
+                                    <input type="datetime-local" id="customTime" name="customTime">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Method -->
+                        <div class="form-section">
+                            <h2>Metode Pembayaran</h2>
+                            <div class="payment-methods">
+                                <label class="payment-method">
+                                    <input type="radio" name="paymentMethod" value="cash" checked>
+                                    <div class="method-info">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                        <div>
+                                            <strong>Tunai</strong>
+                                            <small>Bayar saat pickup/delivery</small>
+                                        </div>
+                                    </div>
+                                </label>
+                                
+                                <label class="payment-method">
+                                    <input type="radio" name="paymentMethod" value="transfer">
+                                    <div class="method-info">
+                                        <i class="fas fa-university"></i>
+                                        <div>
+                                            <strong>Transfer Bank</strong>
+                                            <small>BCA, Mandiri, BNI, BRI</small>
+                                        </div>
+                                    </div>
+                                </label>
+                                
+                                <label class="payment-method">
+                                    <input type="radio" name="paymentMethod" value="ewallet">
+                                    <div class="method-info">
+                                        <i class="fas fa-mobile-alt"></i>
+                                        <div>
+                                            <strong>E-Wallet</strong>
+                                            <small>GoPay, OVO, DANA, ShopeePay</small>
+                                        </div>
+                                    </div>
+                                </label>
+                                
+                                <label class="payment-method">
+                                    <input type="radio" name="paymentMethod" value="qris">
+                                    <div class="method-info">
+                                        <i class="fas fa-qrcode"></i>
+                                        <div>
+                                            <strong>QRIS</strong>
+                                            <small>Scan QR untuk pembayaran</small>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Payment Details -->
+                        <div class="payment-details" id="transferDetails" style="display: none;">
+                            <h3>Detail Transfer Bank</h3>
+                            <div class="bank-accounts">
+                                <div class="bank-account">
+                                    <strong>Bank BCA</strong>
+                                    <p>No. Rekening: 1234567890</p>
+                                    <p>Atas Nama: AS CAFE</p>
+                                </div>
+                                <div class="bank-account">
+                                    <strong>Bank Mandiri</strong>
+                                    <p>No. Rekening: 0987654321</p>
+                                    <p>Atas Nama: AS CAFE</p>
+                                </div>
+                            </div>
+                            <p class="payment-note">Silakan transfer sesuai total pembayaran dan kirim bukti transfer ke WhatsApp kami.</p>
+                        </div>
+
+                        <div class="payment-details" id="ewalletDetails" style="display: none;">
+                            <h3>Detail E-Wallet</h3>
+                            <div class="ewallet-options">
+                                <div class="ewallet-option">
+                                    <strong>GoPay:</strong> 081234567890
+                                </div>
+                                <div class="ewallet-option">
+                                    <strong>OVO:</strong> 081234567890
+                                </div>
+                                <div class="ewallet-option">
+                                    <strong>DANA:</strong> 081234567890
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="payment-details" id="qrisDetails" style="display: none;">
+                            <h3>Pembayaran QRIS</h3>
+                            <div class="qris-code">
+                                <img src="assets/images/qris-code.png" alt="QRIS Code">
+                                <p>Scan QR Code di atas untuk melakukan pembayaran</p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="order-summary">
+                    <div class="summary-card">
+                        <h3>Ringkasan Pesanan</h3>
+                        
+                        <div class="order-items" id="orderItems">
+                            <!-- Items will be populated by JavaScript -->
+                        </div>
+                        
+                        <div class="summary-calculations">
+                            <div class="summary-row">
+                                <span>Subtotal</span>
+                                <span id="subtotalAmount">Rp 195.000</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Biaya Layanan</span>
+                                <span>Rp 5.000</span>
+                            </div>
+                            <div class="summary-row" id="deliveryFeeRow" style="display: none;">
+                                <span>Biaya Pengiriman</span>
+                                <span>Rp 15.000</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>PPN (11%)</span>
+                                <span id="taxAmount">Rp 22.000</span>
+                            </div>
+                            <div class="summary-divider"></div>
+                            <div class="summary-row total">
+                                <span>Total Pembayaran</span>
+                                <span id="totalAmount">Rp 222.000</span>
+                            </div>
+                        </div>
+
+                        <div class="delivery-info">
+                            <h4>Informasi Pengiriman</h4>
+                            <div class="delivery-method" id="deliveryMethod">
+                                <i class="fas fa-store"></i>
+                                <div>
+                                    <strong>Ambil di Tempat</strong>
+                                    <small>Siap dalam 15-20 menit</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" form="checkoutForm" class="place-order-btn">
+                            <i class="fas fa-lock"></i>
+                            Buat Pesanan
+                        </button>
+                        
+                        <div class="security-info">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Transaksi Anda aman dan terenkripsi</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>AS CAFE</h2>
+                    <p>Kafe Kekinian dengan Cita Rasa Premium</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h3>Menu</h3>
+                        <ul>
+                            <li><a href="menu.html">Semua Menu</a></li>
+                            <li><a href="menu.html#coffee">Kopi</a></li>
+                            <li><a href="menu.html#food">Makanan</a></li>
+                            <li><a href="menu.html#dessert">Dessert</a></li>
+                            <li><a href="menu.html#drinks">Minuman</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Informasi</h3>
+                        <ul>
+                            <li><a href="tentang.html">Tentang Kami</a></li>
+                            <li><a href="artikel.html">Artikel</a></li>
+                            <li><a href="karir.html">Karir</a></li>
+                            <li><a href="faq.html">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Layanan</h3>
+                        <ul>
+                            <li><a href="reservasi.html">Reservasi</a></li>
+                            <li><a href="delivery.html">Delivery</a></li>
+                            <li><a href="catering.html">Catering</a></li>
+                            <li><a href="event.html">Private Event</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 AS CAFE. All Rights Reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="privacy.html">Kebijakan Privasi</a>
+                    <a href="terms.html">Syarat & Ketentuan</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/pembayaran.js"></script>
+</body>
+</html>

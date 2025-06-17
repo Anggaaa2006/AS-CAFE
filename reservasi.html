@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservasi Meja - AS CAFE</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/reservasi.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>AS CAFE</h1>
+            </div>
+            <nav>
+                <ul class="menu">
+                    <li><a href="index.html">Beranda</a></li>
+                    <li><a href="menu.html">Menu</a></li>
+                    <li><a href="artikel.html">Artikel</a></li>
+                    <li><a href="reservasi.html" class="active">Reservasi</a></li>
+                    <li><a href="tentang.html">Tentang Kami</a></li>
+                </ul>
+                <div class="nav-icons">
+                    <a href="keranjang.html" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></a>
+                    <a href="login.html" class="user-icon"><i class="fas fa-user"></i></a>
+                </div>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Banner -->
+    <section class="page-banner">
+        <div class="container">
+            <h1>Reservasi Meja</h1>
+            <p>Nikmati pengalaman makan yang lebih nyaman dengan reservasi meja di AS CAFE</p>
+        </div>
+    </section>
+
+    <!-- Reservation Steps -->
+    <section class="reservation-steps">
+        <div class="container">
+            <h2>Cara Reservasi</h2>
+            <div class="steps-grid">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Pilih Tanggal & Waktu</h3>
+                        <p>Tentukan tanggal dan waktu yang Anda inginkan</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Isi Data Diri</h3>
+                        <p>Lengkapi informasi kontak dan jumlah tamu</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Konfirmasi</h3>
+                        <p>Terima konfirmasi reservasi melalui email/WhatsApp</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Table Selection -->
+    <section class="table-selection">
+        <div class="container">
+            <h2>Pilih Meja</h2>
+            <div class="table-layout">
+                <div class="table-map">
+                    <div class="table-item available" data-table="1" data-capacity="2">
+                        <div class="table-number">1</div>
+                        <div class="table-info">2 Orang</div>
+                    </div>
+                    <div class="table-item available" data-table="2" data-capacity="2">
+                        <div class="table-number">2</div>
+                        <div class="table-info">2 Orang</div>
+                    </div>
+                    <div class="table-item occupied" data-table="3" data-capacity="4">
+                        <div class="table-number">3</div>
+                        <div class="table-info">4 Orang</div>
+                    </div>
+                    <div class="table-item available" data-table="4" data-capacity="4">
+                        <div class="table-number">4</div>
+                        <div class="table-info">4 Orang</div>
+                    </div>
+                    <div class="table-item reserved" data-table="5" data-capacity="6">
+                        <div class="table-number">5</div>
+                        <div class="table-info">6 Orang</div>
+                    </div>
+                    <div class="table-item available" data-table="6" data-capacity="6">
+                        <div class="table-number">6</div>
+                        <div class="table-info">6 Orang</div>
+                    </div>
+                    <div class="table-item available" data-table="7" data-capacity="8">
+                        <div class="table-number">7</div>
+                        <div class="table-info">8 Orang</div>
+                    </div>
+                    <div class="table-item available" data-table="8" data-capacity="2">
+                        <div class="table-number">8</div>
+                        <div class="table-info">2 Orang</div>
+                    </div>
+                </div>
+                
+                <div class="table-legend">
+                    <h3>Keterangan:</h3>
+                    <div class="legend-item">
+                        <div class="legend-color available"></div>
+                        <span>Tersedia</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color occupied"></div>
+                        <span>Terisi</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color reserved"></div>
+                        <span>Direservasi</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color selected"></div>
+                        <span>Dipilih</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reservation Form -->
+    <section class="reservation-form-section">
+        <div class="container">
+            <div class="form-container">
+                <h2>Form Reservasi</h2>
+                <form id="reservationForm" class="reservation-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="reservationDate">Tanggal Reservasi *</label>
+                            <input type="date" id="reservationDate" name="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reservationTime">Waktu *</label>
+                            <select id="reservationTime" name="time" required>
+                                <option value="">Pilih Waktu</option>
+                                <option value="08:00">08:00</option>
+                                <option value="08:30">08:30</option>
+                                <option value="09:00">09:00</option>
+                                <option value="09:30">09:30</option>
+                                <option value="10:00">10:00</option>
+                                <option value="10:30">10:30</option>
+                                <option value="11:00">11:00</option>
+                                <option value="11:30">11:30</option>
+                                <option value="12:00">12:00</option>
+                                <option value="12:30">12:30</option>
+                                <option value="13:00">13:00</option>
+                                <option value="13:30">13:30</option>
+                                <option value="14:00">14:00</option>
+                                <option value="14:30">14:30</option>
+                                <option value="15:00">15:00</option>
+                                <option value="15:30">15:30</option>
+                                <option value="16:00">16:00</option>
+                                <option value="16:30">16:30</option>
+                                <option value="17:00">17:00</option>
+                                <option value="17:30">17:30</option>
+                                <option value="18:00">18:00</option>
+                                <option value="18:30">18:30</option>
+                                <option value="19:00">19:00</option>
+                                <option value="19:30">19:30</option>
+                                <option value="20:00">20:00</option>
+                                <option value="20:30">20:30</option>
+                                <option value="21:00">21:00</option>
+                                <option value="21:30">21:30</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="guestCount">Jumlah Tamu *</label>
+                            <select id="guestCount" name="guests" required>
+                                <option value="">Pilih Jumlah</option>
+                                <option value="1">1 Orang</option>
+                                <option value="2">2 Orang</option>
+                                <option value="3">3 Orang</option>
+                                <option value="4">4 Orang</option>
+                                <option value="5">5 Orang</option>
+                                <option value="6">6 Orang</option>
+                                <option value="7">7 Orang</option>
+                                <option value="8">8 Orang</option>
+                                <option value="8+">Lebih dari 8 Orang</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="selectedTable">Meja Dipilih</label>
+                            <input type="text" id="selectedTable" name="table" readonly placeholder="Pilih meja dari layout di atas">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customerName">Nama Lengkap *</label>
+                            <input type="text" id="customerName" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerEmail">Email *</label>
+                            <input type="email" id="customerEmail" name="email" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customerPhone">Nomor Telepon *</label>
+                            <input type="tel" id="customerPhone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="occasion">Acara Khusus</label>
+                            <select id="occasion" name="occasion">
+                                <option value="">Pilih Acara (Opsional)</option>
+                                <option value="birthday">Ulang Tahun</option>
+                                <option value="anniversary">Anniversary</option>
+                                <option value="business">Meeting Bisnis</option>
+                                <option value="date">Kencan</option>
+                                <option value="family">Keluarga</option>
+                                <option value="other">Lainnya</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="specialRequests">Permintaan Khusus</label>
+                        <textarea id="specialRequests" name="requests" rows="4" placeholder="Contoh: Dekorasi ulang tahun, makanan khusus, dll."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="terms" required>
+                            <span class="checkmark"></span>
+                            Saya setuju dengan <a href="#" class="terms-link">syarat dan ketentuan</a> reservasi
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="newsletter">
+                            <span class="checkmark"></span>
+                            Saya ingin menerima informasi promo dan event terbaru
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-calendar-check"></i>
+                        Buat Reservasi
+                    </button>
+                </form>
+            </div>
+
+            <div class="reservation-info">
+                <div class="info-card">
+                    <h3>Informasi Penting</h3>
+                    <ul>
+                        <li><i class="fas fa-clock"></i> Reservasi dapat dibuat maksimal 30 hari sebelumnya</li>
+                        <li><i class="fas fa-users"></i> Meja akan ditahan selama 15 menit setelah waktu reservasi</li>
+                        <li><i class="fas fa-phone"></i> Konfirmasi akan dikirim melalui WhatsApp/Email</li>
+                        <li><i class="fas fa-calendar-times"></i> Pembatalan gratis hingga 2 jam sebelum waktu reservasi</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h3>Jam Operasional</h3>
+                    <div class="operating-hours">
+                        <div class="day-hours">
+                            <span>Senin - Jumat</span>
+                            <span>08:00 - 22:00</span>
+                        </div>
+                        <div class="day-hours">
+                            <span>Sabtu - Minggu</span>
+                            <span>08:00 - 23:00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>Hubungi Kami</h3>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>+62 812 3456 7890</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>reservasi@ascafe.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Jl. Kopi Nikmat No. 123, Jakarta Selatan</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>AS CAFE</h2>
+                    <p>Kafe Kekinian dengan Cita Rasa Premium</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h3>Menu</h3>
+                        <ul>
+                            <li><a href="menu.html">Semua Menu</a></li>
+                            <li><a href="menu.html#coffee">Kopi</a></li>
+                            <li><a href="menu.html#food">Makanan</a></li>
+                            <li><a href="menu.html#dessert">Dessert</a></li>
+                            <li><a href="menu.html#drinks">Minuman</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Informasi</h3>
+                        <ul>
+                            <li><a href="tentang.html">Tentang Kami</a></li>
+                            <li><a href="artikel.html">Artikel</a></li>
+                            <li><a href="karir.html">Karir</a></li>
+                            <li><a href="faq.html">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Layanan</h3>
+                        <ul>
+                            <li><a href="reservasi.html">Reservasi</a></li>
+                            <li><a href="delivery.html">Delivery</a></li>
+                            <li><a href="catering.html">Catering</a></li>
+                            <li><a href="event.html">Private Event</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 AS CAFE. All Rights Reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="privacy.html">Kebijakan Privasi</a>
+                    <a href="terms.html">Syarat & Ketentuan</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/reservasi.js"></script>
+</body>
+</html>

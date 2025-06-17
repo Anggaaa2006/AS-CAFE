@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - AS CAFE</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/menu.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>AS CAFE</h1>
+            </div>
+            <nav>
+                <ul class="menu">
+                    <li><a href="index.html">Beranda</a></li>
+                    <li><a href="menu.html" class="active">Menu</a></li>
+                    <li><a href="artikel.html">Artikel</a></li>
+                    <li><a href="reservasi.html">Reservasi</a></li>
+                    <li><a href="tentang.html">Tentang Kami</a></li>
+                </ul>
+                <div class="nav-icons">
+                    <a href="keranjang.html" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></a>
+                    <a href="login.html" class="user-icon"><i class="fas fa-user"></i></a>
+                </div>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Banner -->
+    <section class="page-banner">
+        <div class="container">
+            <h1>Menu Kami</h1>
+            <p>Nikmati berbagai pilihan menu berkualitas di AS CAFE</p>
+        </div>
+    </section>
+
+    <!-- Menu Categories -->
+    <section class="menu-categories">
+        <div class="container">
+            <div class="category-tabs">
+                <button class="category-tab active" data-category="all">Semua</button>
+                <button class="category-tab" data-category="coffee" id="coffee">Kopi</button>
+                <button class="category-tab" data-category="food" id="food">Makanan</button>
+                <button class="category-tab" data-category="dessert" id="dessert">Dessert</button>
+                <button class="category-tab" data-category="drinks" id="drinks">Minuman</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Items -->
+    <section class="menu-items">
+        <div class="container">
+            <div class="menu-grid">
+                <!-- Coffee Items -->
+                <div class="menu-item" data-category="coffee">
+                    <div class="menu-image">
+                        <img src="assets/images/coffee1.jpg" alt="Espresso">
+                    </div>
+                    <div class="menu-info">
+                        <h3>Espresso</h3>
+                        <p>Kopi hitam kental dengan cita rasa kuat</p>
+                        <div class="menu-price">Rp 25.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+                <div class="menu-item" data-category="coffee">
+                    <div class="menu-image">
+                        <img src="assets/images/coffee2.jpg" alt="Cappuccino">
+                    </div>
+                    <div class="menu-info">
+                        <h3>Cappuccino</h3>
+                        <p>Espresso dengan steamed milk dan foam</p>
+                        <div class="menu-price">Rp 35.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+                <div class="menu-item" data-category="coffee">
+                    <div class="menu-image">
+                        <img src="assets/images/coffee3.jpg" alt="Latte">
+                    </div>
+                    <div class="menu-info">
+                        <h3>Latte</h3>
+                        <p>Espresso dengan susu steamed dan sedikit foam</p>
+                        <div class="menu-price">Rp 35.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+                <div class="menu-item" data-category="coffee">
+                    <div class="menu-image">
+                        <img src="assets/images/coffee4.jpg" alt="Americano">
+                    </div>
+                    <div class="menu-info">
+                        <h3>Americano</h3>
+                        <p>Espresso dengan tambahan air panas</p>
+                        <div class="menu-price">Rp 30.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+                <div class="menu-item" data-category="coffee">
+                    <div class="menu-image">
+                        <img src="assets/images/coffee5.jpg" alt="Mocha">
+                    </div>
+                    <div class="menu-info">
+                        <h3>Mocha</h3>
+                        <p>Espresso dengan cokelat dan susu steamed</p>
+                        <div class="menu-price">Rp 38.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+                <div class="menu-item" data-category="coffee">
+                    <div class="menu-image">
+                        <img src="assets/images/coffee6.jpg" alt="Signature Coffee">
+                    </div>
+                    <div class="menu-info">
+                        <h3>Signature Coffee</h3>
+                        <p>Kopi spesial racikan barista AS CAFE</p>
+                        <div class="menu-price">Rp 45.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+
+                <!-- Food Items -->
+                <div class="menu-item" data-category="food">
+                    <div class="menu-image">
+                        <img src="assets/images/food1.jpg" alt="Pasta Carbonara">
+                    </div>
+                    <div class="menu-info">
+                        <h3>Pasta Carbonara</h3>
+                        <p>Pasta dengan saus krim, telur, dan bacon</p>
+                        <div class="menu-price">Rp 65.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+                <div class="menu-item" data-category="food">
+                    <div class="menu-image">
+                        <img src="assets/images/food2.jpg" alt="Chicken Sandwich">
+                    </div>
+                    <div class="menu-info">
+                        <h3>Chicken Sandwich</h3>
+                        <p>Sandwich dengan ayam panggang dan sayuran segar</p>
+                        <div class="menu-price">Rp 55.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+                <div class="menu-item" data-category="food">
+                    <div class="menu-image">
+                        <img src="assets/images/food3.jpg" alt="Caesar Salad">
+                    </div>
+                    <div class="menu-info">
+                        <h3>Caesar Salad</h3>
+                        <p>Salad dengan dressing caesar, crouton, dan parmesan</p>
+                        <div class="menu-price">Rp 50.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+                <div class="menu-item" data-category="food">
+                    <div class="menu-image">
+                        <img src="assets/images/food4.jpg" alt="Beef Burger">
+                    </div>
+                    <div class="menu-info">
+                        <h3>Beef Burger</h3>
+                        <p>Burger dengan daging sapi premium dan keju</p>
+                        <div class="menu-price">Rp 70.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+                <div class="menu-item" data-category="food">
+                    <div class="menu-image">
+                        <img src="assets/images/food5.jpg" alt="Mushroom Risotto">
+                    </div>
+                    <div class="menu-info">
+                        <h3>Mushroom Risotto</h3>
+                        <p>Risotto dengan jamur dan parmesan</p>
+                        <div class="menu-price">Rp 68.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+                <div class="menu-item" data-category="food">
+                    <div class="menu-image">
+                        <img src="assets/images/food6.jpg" alt="Grilled Salmon">
+                    </div>
+                    <div class="menu-info">
+                        <h3>Grilled Salmon</h3>
+                        <p>Salmon panggang dengan saus lemon butter</p>
+                        <div class="menu-price">Rp 85.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+
+                <!-- Dessert Items -->
+                <div class="menu-item" data-category="dessert">
+                    <div class="menu-image">
+                        <img src="assets/images/dessert1.jpg" alt="Tiramisu">
+                    </div>
+                    <div class="menu-info">
+                        <h3>Tiramisu</h3>
+                        <p>Dessert Italia dengan lapisan kopi dan mascarpone</p>
+                        <div class="menu-price">Rp 45.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+                <div class="menu-item" data-category="dessert">
+                    <div class="menu-image">
+                        <img src="assets/images/dessert2.jpg" alt="Chocolate Lava Cake">
+                    </div>
+                    <div class="menu-info">
+                        <h3>Chocolate Lava Cake</h3>
+                        <p>Kue cokelat dengan lelehan cokelat di tengahnya</p>
+                        <div class="menu-price">Rp 48.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+                <div class="menu-item" data-category="dessert">
+                    <div class="menu-image">
+                        <img src="assets/images/dessert3.jpg" alt="Cheesecake">
+                    </div>
+                    <div class="menu-info">
+                        <h3>Cheesecake</h3>
+                        <p>Kue keju lembut dengan topping buah</p>
+                        <div class="menu-price">Rp 50.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+                <div class="menu-item" data-category="dessert">
+                    <div class="menu-image">
+                        <img src="assets/images/dessert4.jpg" alt="Crème Brûlée">
+                    </div>
+                    <div class="menu-info">
+                        <h3>Crème Brûlée</h3>
+                        <p>Custard Prancis dengan lapisan karamel renyah</p>
+                        <div class="menu-price">Rp 42.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+
+                <!-- Drinks Items -->
+                <div class="menu-item" data-category="drinks">
+                    <div class="menu-image">
+                        <img src="assets/images/drink1.jpg" alt="Fresh Orange Juice">
+                    </div>
+                    <div class="menu-info">
+                        <h3>Fresh Orange Juice</h3>
+                        <p>Jus jeruk segar tanpa tambahan gula</p>
+                        <div class="menu-price">Rp 30.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+                <div class="menu-item" data-category="drinks">
+                    <div class="menu-image">
+                        <img src="assets/images/drink2.jpg" alt="Strawberry Smoothie">
+                    </div>
+                    <div class="menu-info">
+                        <h3>Strawberry Smoothie</h3>
+                        <p>Smoothie stroberi dengan yogurt dan madu</p>
+                        <div class="menu-price">Rp 35.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+                <div class="menu-item" data-category="drinks">
+                    <div class="menu-image">
+                        <img src="assets/images/drink3.jpg" alt="Iced Tea">
+                    </div>
+                    <div class="menu-info">
+                        <h3>Iced Tea</h3>
+                        <p>Teh dingin dengan lemon dan mint</p>
+                        <div class="menu-price">Rp 25.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+                <div class="menu-item" data-category="drinks">
+                    <div class="menu-image">
+                        <img src="assets/images/drink4.jpg" alt="Mineral Water">
+                    </div>
+                    <div class="menu-info">
+                        <h3>Mineral Water</h3>
+                        <p>Air mineral premium</p>
+                        <div class="menu-price">Rp 15.000</div>
+                        <button class="add-to-cart">Tambah ke Keranjang</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>AS CAFE</h2>
+                    <p>Kafe Kekinian dengan Cita Rasa Premium</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h3>Menu</h3>
+                        <ul>
+                            <li><a href="menu.html">Semua Menu</a></li>
+                            <li><a href="menu.html#coffee">Kopi</a></li>
+                            <li><a href="menu.html#food">Makanan</a></li>
+                            <li><a href="menu.html#dessert">Dessert</a></li>
+                            <li><a href="menu.html#drinks">Minuman</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Informasi</h3>
+                        <ul>
+                            <li><a href="tentang.html">Tentang Kami</a></li>
+                            <li><a href="artikel.html">Artikel</a></li>
+                            <li><a href="karir.html">Karir</a></li>
+                            <li><a href="faq.html">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Layanan</h3>
+                        <ul>
+                            <li><a href="reservasi.html">Reservasi</a></li>
+                            <li><a href="delivery.html">Delivery</a></li>
+                            <li><a href="catering.html">Catering</a></li>
+                            <li><a href="event.html">Private Event</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 AS CAFE. All Rights Reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="privacy.html">Kebijakan Privasi</a>
+                    <a href="terms.html">Syarat & Ketentuan</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/menu.js"></script>
+</body>
+</html>
