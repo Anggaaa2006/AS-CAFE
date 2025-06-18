@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - AS CAFE</title>
+    <link rel="stylesheet" href="css/customer-style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-coffee"></i>
+                <h1>AS CAFE</h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="customer-menu.html" class="active">Menu</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+            </nav>
+            <div class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menu Hero Section -->
+    <section class="menu-hero">
+        <div class="container">
+            <h2>Our Menu</h2>
+            <p>Discover our delicious selection of coffee, food, and treats</p>
+        </div>
+    </section>
+
+    <!-- Category Filter -->
+    <section class="category-filter">
+        <div class="container">
+            <div class="filter-buttons" id="categoryFilters">
+                <button class="filter-btn active" data-category="all">
+                    <i class="fas fa-th"></i>
+                    All Items
+                </button>
+                <!-- Categories will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Grid -->
+    <section class="menu-section">
+        <div class="container">
+            <div class="menu-grid" id="menuGrid">
+                <!-- Menu items will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Your Order</h3>
+            <button class="close-cart" onclick="toggleCart()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Cart items will be loaded here -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <strong>Total: <span id="cartTotal">Rp 0</span></strong>
+            </div>
+            <button class="checkout-btn" onclick="checkout()">
+              <i class="fas fa-qrcode"></i>
+              Pay with QRIS
+            </button>
+        </div>
+    </div>
+
+    <!-- Menu Item Modal -->
+    <div id="itemModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalItemName"></h3>
+                <span class="close" onclick="closeItemModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="item-image">
+                    <img id="modalItemImage" src="/placeholder.svg" alt="">
+                </div>
+                <div class="item-details">
+                    <p id="modalItemDescription"></p>
+                    <div class="item-meta" id="modalItemMeta"></div>
+                    <div class="item-tags" id="modalItemTags"></div>
+                    <div class="item-price">
+                        <span id="modalItemPrice"></span>
+                    </div>
+                    <div class="quantity-selector">
+                        <button onclick="decreaseQuantity()">-</button>
+                        <span id="modalQuantity">1</span>
+                        <button onclick="increaseQuantity()">+</button>
+                    </div>
+                    <button class="add-to-cart-btn" onclick="addToCartFromModal()">
+                        Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin-data.js"></script>
+    <script src="js/customer-menu.js"></script>
+</body>
+</html>

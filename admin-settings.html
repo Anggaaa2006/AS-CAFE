@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengaturan - AS CAFE Admin</title>
+    <link rel="stylesheet" href="css/admin-style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-coffee"></i> AS CAFE</h2>
+                <p>Admin Panel</p>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="admin-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="admin-articles.html"><i class="fas fa-newspaper"></i> Kelola Artikel</a></li>
+                <li><a href="admin-products.html"><i class="fas fa-box"></i> Kelola Produk</a></li>
+                <li><a href="admin-users.html"><i class="fas fa-users"></i> Kelola Pengguna</a></li>
+                <li><a href="admin-transactions.html"><i class="fas fa-receipt"></i> Kelola Transaksi</a></li>
+                <li><a href="admin-reservations.html"><i class="fas fa-calendar"></i> Reservasi</a></li>
+                <li><a href="admin-reports.html"><i class="fas fa-chart-bar"></i> Laporan</a></li>
+                <li><a href="admin-settings.html" class="active"><i class="fas fa-cog"></i> Pengaturan</a></li>
+                <li><a href="index.html" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <h1>Pengaturan</h1>
+            </header>
+
+            <div class="settings-container">
+                <!-- Cafe Settings -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Pengaturan Cafe</h3>
+                    </div>
+                    <div class="card-content">
+                        <form id="cafeSettingsForm">
+                            <div class="form-group">
+                                <label for="cafeName">Nama Cafe:</label>
+                                <input type="text" id="cafeName" value="AS CAFE">
+                            </div>
+                            <div class="form-group">
+                                <label for="cafeAddress">Alamat:</label>
+                                <textarea id="cafeAddress" rows="3">Jl. Contoh No. 123, Jakarta</textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="cafePhone">Telepon:</label>
+                                    <input type="tel" id="cafePhone" value="021-12345678">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cafeEmail">Email:</label>
+                                    <input type="email" id="cafeEmail" value="info@ascafe.com">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="openTime">Jam Buka:</label>
+                                    <input type="time" id="openTime" value="07:00">
+                                </div>
+                                <div class="form-group">
+                                    <label for="closeTime">Jam Tutup:</label>
+                                    <input type="time" id="closeTime" value="22:00">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Simpan Pengaturan</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- System Settings -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Pengaturan Sistem</h3>
+                    </div>
+                    <div class="card-content">
+                        <form id="systemSettingsForm">
+                            <div class="form-group">
+                                <label for="currency">Mata Uang:</label>
+                                <select id="currency">
+                                    <option value="IDR" selected>Rupiah (IDR)</option>
+                                    <option value="USD">Dollar (USD)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="timezone">Zona Waktu:</label>
+                                <select id="timezone">
+                                    <option value="Asia/Jakarta" selected>WIB (Asia/Jakarta)</option>
+                                    <option value="Asia/Makassar">WITA (Asia/Makassar)</option>
+                                    <option value="Asia/Jayapura">WIT (Asia/Jayapura)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="language">Bahasa:</label>
+                                <select id="language">
+                                    <option value="id" selected>Bahasa Indonesia</option>
+                                    <option value="en">English</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Simpan Pengaturan</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Notification Settings -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Pengaturan Notifikasi</h3>
+                    </div>
+                    <div class="card-content">
+                        <form id="notificationSettingsForm">
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="emailNotifications" checked>
+                                    <span class="checkmark"></span>
+                                    Notifikasi Email
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="orderNotifications" checked>
+                                    <span class="checkmark"></span>
+                                    Notifikasi Pesanan Baru
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="reservationNotifications" checked>
+                                    <span class="checkmark"></span>
+                                    Notifikasi Reservasi
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Simpan Pengaturan</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Data Management -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Manajemen Data</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="data-actions">
+                            <button class="btn btn-success" onclick="exportAllData()">
+                                <i class="fas fa-download"></i> Export Semua Data
+                            </button>
+                            <button class="btn btn-warning" onclick="clearOldData()">
+                                <i class="fas fa-trash-alt"></i> Hapus Data Lama
+                            </button>
+                            <button class="btn btn-danger" onclick="resetAllData()">
+                                <i class="fas fa-exclamation-triangle"></i> Reset Semua Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/admin-data.js"></script>
+    <script src="js/admin-settings.js"></script>
+</body>
+</html>

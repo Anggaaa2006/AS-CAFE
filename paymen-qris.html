@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembayaran QRIS - AS CAFE</title>
+    <link rel="stylesheet" href="css/payment-style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="payment-container">
+        <!-- Header -->
+        <header class="payment-header">
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h1>Pembayaran QRIS</h1>
+            <div class="timer" id="paymentTimer">
+                <i class="fas fa-clock"></i>
+                <span id="timerDisplay">15:00</span>
+            </div>
+        </header>
+
+        <!-- Payment Content -->
+        <div class="payment-content">
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <h3>Ringkasan Pesanan</h3>
+                <div id="orderItems" class="order-items">
+                    <!-- Order items will be loaded here -->
+                </div>
+                <div class="order-total">
+                    <div class="total-row">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">Rp 0</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Pajak (10%):</span>
+                        <span id="tax">Rp 0</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Biaya Layanan (5%):</span>
+                        <span id="serviceFee">Rp 0</span>
+                    </div>
+                    <div class="total-row final-total">
+                        <span>Total Pembayaran:</span>
+                        <span id="finalTotal">Rp 0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QRIS Section -->
+            <div class="qris-section">
+                <div class="qris-header">
+                    <h3>Scan QR Code untuk Pembayaran</h3>
+                    <p>Gunakan aplikasi mobile banking atau e-wallet Anda</p>
+                </div>
+
+                <div class="qris-container">
+                    <div class="qris-code" id="qrisCode">
+                        <!-- QR Code will be generated here -->
+                        <div class="qr-placeholder">
+                            <i class="fas fa-qrcode"></i>
+                            <p>Generating QR Code...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-info">
+                        <div class="merchant-info">
+                            <h4>AS CAFE</h4>
+                            <p>Merchant ID: 123456789</p>
+                        </div>
+                        
+                        <div class="payment-methods">
+                            <h4>Metode Pembayaran yang Didukung:</h4>
+                            <div class="payment-logos">
+                                <img src="/placeholder.svg?height=40&width=60" alt="GoPay" class="payment-logo">
+                                <img src="/placeholder.svg?height=40&width=60" alt="OVO" class="payment-logo">
+                                <img src="/placeholder.svg?height=40&width=60" alt="DANA" class="payment-logo">
+                                <img src="/placeholder.svg?height=40&width=60" alt="ShopeePay" class="payment-logo">
+                                <img src="/placeholder.svg?height=40&width=60" alt="LinkAja" class="payment-logo">
+                                <img src="/placeholder.svg?height=40&width=60" alt="BCA Mobile" class="payment-logo">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Status -->
+                <div class="payment-status" id="paymentStatus">
+                    <div class="status-waiting">
+                        <div class="loading-spinner"></div>
+                        <h4>Menunggu Pembayaran</h4>
+                        <p>Silakan scan QR code dan selesaikan pembayaran</p>
+                    </div>
+                </div>
+
+                <!-- Manual Payment Check -->
+                <div class="manual-check">
+                    <button class="check-payment-btn" onclick="checkPaymentStatus()">
+                        <i class="fas fa-sync-alt"></i>
+                        Cek Status Pembayaran
+                    </button>
+                    <p class="help-text">Klik tombol ini jika pembayaran sudah selesai</p>
+                </div>
+            </div>
+
+            <!-- Instructions -->
+            <div class="payment-instructions">
+                <h4>Cara Pembayaran:</h4>
+                <ol>
+                    <li>Buka aplikasi mobile banking atau e-wallet Anda</li>
+                    <li>Pilih menu "Scan QR" atau "QRIS"</li>
+                    <li>Arahkan kamera ke QR code di atas</li>
+                    <li>Konfirmasi jumlah pembayaran</li>
+                    <li>Masukkan PIN untuk menyelesaikan transaksi</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content success-modal">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3>Pembayaran Berhasil!</h3>
+            <p>Terima kasih atas pembayaran Anda</p>
+            <div class="transaction-details">
+                <div class="detail-row">
+                    <span>Transaction ID:</span>
+                    <span id="transactionId">-</span>
+                </div>
+                <div class="detail-row">
+                    <span>Waktu:</span>
+                    <span id="transactionTime">-</span>
+                </div>
+                <div class="detail-row">
+                    <span>Jumlah:</span>
+                    <span id="transactionAmount">-</span>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="downloadReceipt()">
+                    <i class="fas fa-download"></i>
+                    Download Struk
+                </button>
+                <button class="btn btn-secondary" onclick="goToHome()">
+                    Kembali ke Menu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Failed Modal -->
+    <div id="failedModal" class="modal">
+        <div class="modal-content failed-modal">
+            <div class="failed-icon">
+                <i class="fas fa-times-circle"></i>
+            </div>
+            <h3>Pembayaran Gagal</h3>
+            <p id="failureReason">Terjadi kesalahan dalam proses pembayaran</p>
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="retryPayment()">
+                    <i class="fas fa-redo"></i>
+                    Coba Lagi
+                </button>
+                <button class="btn btn-secondary" onclick="goBack()">
+                    Kembali
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin-data.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    <script src="js/payment-qris.js"></script>
+</body>
+</html>

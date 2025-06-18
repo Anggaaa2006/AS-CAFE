@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Menu - AS CAFE Admin</title>
+    <link rel="stylesheet" href="css/admin-style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-coffee"></i> AS CAFE</h2>
+                <p>Admin Panel</p>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="admin-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="admin-articles.html"><i class="fas fa-newspaper"></i> Kelola Artikel</a></li>
+                <li><a href="admin-products.html"><i class="fas fa-box"></i> Kelola Produk</a></li>
+                <li><a href="admin-menu.html" class="active"><i class="fas fa-utensils"></i> Kelola Menu</a></li>
+                <li><a href="admin-users.html"><i class="fas fa-users"></i> Kelola Pengguna</a></li>
+                <li><a href="admin-transactions.html"><i class="fas fa-receipt"></i> Kelola Transaksi</a></li>
+                <li><a href="admin-reservations.html"><i class="fas fa-calendar"></i> Reservasi</a></li>
+                <li><a href="admin-reports.html"><i class="fas fa-chart-bar"></i> Laporan</a></li>
+                <li><a href="admin-settings.html"><i class="fas fa-cog"></i> Pengaturan</a></li>
+                <li><a href="index.html" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <div>
+                    <h1>Kelola Menu</h1>
+                    <p>Atur dan kelola menu cafe Anda</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-success" onclick="exportMenu()">
+                        <i class="fas fa-download"></i> Export Menu
+                    </button>
+                    <button class="btn btn-primary" onclick="showMenuForm()">
+                        <i class="fas fa-plus"></i> Tambah Menu
+                    </button>
+                </div>
+            </header>
+
+            <!-- Menu Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalMenuItems">0</h3>
+                        <p>Total Menu</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="availableItems">0</h3>
+                        <p>Menu Tersedia</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalCategories">0</h3>
+                        <p>Kategori</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="popularItem">-</h3>
+                        <p>Menu Terpopuler</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Management -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3>Kelola Kategori</h3>
+                    <button class="btn btn-primary" onclick="showCategoryForm()">
+                        <i class="fas fa-plus"></i> Tambah Kategori
+                    </button>
+                </div>
+                <div class="card-content">
+                    <div id="categoriesList" class="categories-grid">
+                        <!-- Categories will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="search-section">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchMenu" placeholder="Cari menu berdasarkan nama atau deskripsi...">
+                </div>
+                <select id="categoryFilter" onchange="filterMenu()">
+                    <option value="">Semua Kategori</option>
+                </select>
+                <select id="statusFilter" onchange="filterMenu()">
+                    <option value="">Semua Status</option>
+                    <option value="available">Tersedia</option>
+                    <option value="unavailable">Tidak Tersedia</option>
+                </select>
+                <select id="priceFilter" onchange="filterMenu()">
+                    <option value="">Semua Harga</option>
+                    <option value="0-25000">< Rp 25.000</option>
+                    <option value="25000-50000">Rp 25.000 - 50.000</option>
+                    <option value="50000-100000">Rp 50.000 - 100.000</option>
+                    <option value="100000+"> > Rp 100.000</option>
+                </select>
+            </div>
+
+            <!-- Menu Items Grid -->
+            <div class="menu-container">
+                <div id="menuList" class="menu-grid">
+                    <!-- Menu items will be loaded here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Menu Form Modal -->
+    <div id="menuModal" class="modal">
+        <div class="modal-content large-modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Tambah Menu Baru</h3>
+                <span class="close" onclick="closeMenuModal()">&times;</span>
+            </div>
+            <form id="menuForm" class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="menuName">Nama Menu:</label>
+                        <input type="text" id="menuName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="menuCategory">Kategori:</label>
+                        <select id="menuCategory" required>
+                            <option value="">Pilih Kategori</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="menuPrice">Harga:</label>
+                        <input type="number" id="menuPrice" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="menuStatus">Status:</label>
+                        <select id="menuStatus">
+                            <option value="available">Tersedia</option>
+                            <option value="unavailable">Tidak Tersedia</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="menuDescription">Deskripsi:</label>
+                    <textarea id="menuDescription" rows="3" placeholder="Deskripsi menu..." required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="menuImage">URL Gambar:</label>
+                        <input type="url" id="menuImage" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label for="menuIngredients">Bahan Utama:</label>
+                        <input type="text" id="menuIngredients" placeholder="Contoh: Kopi, Susu, Gula">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="menuCalories">Kalori (opsional):</label>
+                        <input type="number" id="menuCalories" min="0" placeholder="250">
+                    </div>
+                    <div class="form-group">
+                        <label for="menuPreparationTime">Waktu Persiapan (menit):</label>
+                        <input type="number" id="menuPreparationTime" min="1" placeholder="5">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="menuTags">Tags (pisahkan dengan koma):</label>
+                    <input type="text" id="menuTags" placeholder="hot, coffee, signature">
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="menuSpicy">
+                        <span class="checkmark"></span>
+                        Menu Pedas
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="menuVegetarian">
+                        <span class="checkmark"></span>
+                        Menu Vegetarian
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="menuRecommended">
+                        <span class="checkmark"></span>
+                        Menu Rekomendasi
+                    </label>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeMenuModal()">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Menu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Category Form Modal -->
+    <div id="categoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="categoryModalTitle">Tambah Kategori Baru</h3>
+                <span class="close" onclick="closeCategoryModal()">&times;</span>
+            </div>
+            <form id="categoryForm" class="modal-body">
+                <div class="form-group">
+                    <label for="categoryName">Nama Kategori:</label>
+                    <input type="text" id="categoryName" required>
+                </div>
+                <div class="form-group">
+                    <label for="categoryDescription">Deskripsi:</label>
+                    <textarea id="categoryDescription" rows="3" placeholder="Deskripsi kategori..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="categoryIcon">Icon (Font Awesome class):</label>
+                    <input type="text" id="categoryIcon" placeholder="fas fa-coffee">
+                </div>
+                <div class="form-group">
+                    <label for="categoryColor">Warna:</label>
+                    <input type="color" id="categoryColor" value="#3498db">
+                </div>
+                <div class="form-group">
+                    <label for="categoryOrder">Urutan Tampil:</label>
+                    <input type="number" id="categoryOrder" min="1" value="1">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeCategoryModal()">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Kategori</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/admin-data.js"></script>
+    <script src="js/admin-menu.js"></script>
+</body>
+</html>

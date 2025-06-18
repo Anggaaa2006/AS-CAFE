@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Transaksi - AS CAFE Admin</title>
+    <link rel="stylesheet" href="css/admin-style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-coffee"></i> AS CAFE</h2>
+                <p>Admin Panel</p>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="admin-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="admin-articles.html"><i class="fas fa-newspaper"></i> Kelola Artikel</a></li>
+                <li><a href="admin-products.html"><i class="fas fa-box"></i> Kelola Produk</a></li>
+                <li><a href="admin-users.html"><i class="fas fa-users"></i> Kelola Pengguna</a></li>
+                <li><a href="admin-transactions.html" class="active"><i class="fas fa-receipt"></i> Kelola Transaksi</a></li>
+                <li><a href="admin-reservations.html"><i class="fas fa-calendar"></i> Reservasi</a></li>
+                <li><a href="admin-reports.html"><i class="fas fa-chart-bar"></i> Laporan</a></li>
+                <li><a href="admin-settings.html"><i class="fas fa-cog"></i> Pengaturan</a></li>
+                <li><a href="index.html" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <h1>Kelola Transaksi</h1>
+                <div class="header-actions">
+                    <button class="btn btn-success" onclick="exportTransactions()">
+                        <i class="fas fa-download"></i> Export Data
+                    </button>
+                </div>
+            </header>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalRevenue">Rp 0</h3>
+                        <p>Total Pendapatan</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-receipt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalTransactions">0</h3>
+                        <p>Total Transaksi</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="todayRevenue">Rp 0</h3>
+                        <p>Pendapatan Hari Ini</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="avgTransaction">Rp 0</h3>
+                        <p>Rata-rata Transaksi</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="search-section">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchTransactions" placeholder="Cari transaksi berdasarkan ID atau nama pelanggan...">
+                </div>
+                <input type="date" id="dateFilter" onchange="filterTransactions()">
+                <select id="statusFilter" onchange="filterTransactions()">
+                    <option value="">Semua Status</option>
+                    <option value="completed">Selesai</option>
+                    <option value="pending">Pending</option>
+                    <option value="cancelled">Dibatalkan</option>
+                </select>
+            </div>
+
+            <!-- Transactions Table -->
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID Transaksi</th>
+                            <th>Pelanggan</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Waktu</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionsTableBody">
+                        <!-- Transactions will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Transaction Detail Modal -->
+    <div id="transactionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Detail Transaksi</h3>
+                <span class="close" onclick="closeTransactionModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="transactionDetail">
+                <!-- Transaction details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin-data.js"></script>
+    <script src="js/admin-transactions.js"></script>
+</body>
+</html>
