@@ -1,297 +1,442 @@
-document.addEventListener("DOMContentLoaded", () => {
-  // Cart functionality
-  const cartItems = document.querySelectorAll(".cart-item")
-  const checkoutBtn = document.querySelector(".checkout-btn")
-  const promoInput = document.getElementById("promoInput")
-  const applyPromoBtn = document.getElementById("applyPromo")
-
-  // Update cart totals
-  function updateCartTotals() {
-    let subtotal = 0
-    let itemCount = 0
-
-    cartItems.forEach((item) => {
-      if (item.style.display !== "none") {
-        const priceElement = item.querySelector(".price")
-        const qtyInput = item.querySelector(".qty-input")
-        const price = Number.parseInt(priceElement.textContent.replace(/[^\d]/g, ""))
-        const quantity = Number.parseInt(qtyInput.value)
-
-        subtotal += price
-        itemCount += quantity
-      }
-    })
-
-    const serviceCharge = 5000
-    const tax = Math.round(subtotal * 0.11)
-    const total = subtotal + serviceCharge + tax
-
-    // Update summary
-    document.querySelector(".summary-row:nth-child(1) span:last-child").textContent = `Rp ${subtotal.toLocaleString()}`
-    document.querySelector(".summary-row:nth-child(2) span:last-child").textContent =
-      `Rp ${serviceCharge.toLocaleString()}`
-    document.querySelector(".summary-row:nth-child(3) span:last-child").textContent = `Rp ${tax.toLocaleString()}`
-    document.querySelector(".summary-row.total span:last-child").textContent = `Rp ${total.toLocaleString()}`
-    document.querySelector(".summary-row:nth-child(1) span:first-child").textContent = `Subtotal (${itemCount} item)`
-
-    // Update cart count in header
-    document.querySelector(".cart-count").textContent = itemCount
-
-    // Check if cart is empty
-    const visibleItems = Array.from(cartItems).filter((item) => item.style.display !== "none")
-    if (visibleItems.length === 0) {
-      showEmptyCart()
-    }
-  }
-
-  // Quantity controls
-  cartItems.forEach((item) => {
-    const minusBtn = item.querySelector(".qty-btn.minus")
-    const plusBtn = item.querySelector(".qty-btn.plus")
-    const qtyInput = item.querySelector(".qty-input")
-    const removeBtn = item.querySelector(".remove-btn")
-
-    // Decrease quantity
-    minusBtn.addEventListener("click", () => {
-      const currentQty = Number.parseInt(qtyInput.value)
-      if (currentQty > 1) {
-        qtyInput.value = currentQty - 1
-        updateItemPrice(item)
-        updateCartTotals()
-      }
-    })
-
-    // Increase quantity
-    plusBtn.addEventListener("click", () => {
-      const currentQty = Number.parseInt(qtyInput.value)
-      qtyInput.value = currentQty + 1
-      updateItemPrice(item)
-      updateCartTotals()
-    })
-
-    // Direct input change
-    qtyInput.addEventListener("change", () => {
-      if (Number.parseInt(qtyInput.value) < 1) {
-        qtyInput.value = 1
-      }
-      updateItemPrice(item)
-      updateCartTotals()
-    })
-
-    // Remove item
-    removeBtn.addEventListener("click", () => {
-      item.style.display = "none"
-      updateCartTotals()
-      showNotification("Item berhasil dihapus dari keranjang")
-    })
-
-    // Option changes
-    const radioInputs = item.querySelectorAll('input[type="radio"]')
-    const checkboxInputs = item.querySelectorAll('input[type="checkbox"]')
-
-    radioInputs.forEach((radio) => {
-      radio.addEventListener("change", () => {
-        updateItemPrice(item)
-        updateCartTotals()
-      })
-    })
-
-    checkboxInputs.forEach((checkbox) => {
-      checkbox.addEventListener("change", () => {
-        updateItemPrice(item)
-        updateCartTotals()
-      })
-    })
-  })
-
-  // Update individual item price based on options
-  function updateItemPrice(item) {
-    const basePrice = getBasePrice(item)
-    const quantity = Number.parseInt(item.querySelector(".qty-input").value)
-    const selectedOptions = getSelectedOptions(item)
-
-    let totalPrice = basePrice
-    selectedOptions.forEach((option) => {
-      totalPrice += option.price
-    })
-
-    totalPrice *= quantity
-
-    item.querySelector(".price").textContent = `Rp ${totalPrice.toLocaleString()}`
-  }
-
-  // Get base price for item
-  function getBasePrice(item) {
-    const itemName = item.querySelector("h3").textContent
-    const basePrices = {
-      "Kopi Signature": 35000,
-      "Pasta Carbonara": 65000,
-      Tiramisu: 45000,
-    }
-    return basePrices[itemName] || 0
-  }
-
-  // Get selected options and their prices
-  function getSelectedOptions(item) {
-    const options = []
-
-    // Radio options (size)
-    const selectedRadio = item.querySelector('input[type="radio"]:checked')
-    if (selectedRadio && selectedRadio.value === "large") {
-      options.push({ name: "Large", price: 5000 })
+// Shopping Cart JavaScript
+class ShoppingCart {
+    constructor() {
+        this.cart = JSON.parse(localStorage.getItem('cart')) || [];
+        this.init();
     }
 
-    // Checkbox options (extras)
-    const selectedCheckboxes = item.querySelectorAll('input[type="checkbox"]:checked')
-    selectedCheckboxes.forEach((checkbox) => {
-      if (checkbox.value === "cheese") {
-        options.push({ name: "Extra Cheese", price: 10000 })
-      } else if (checkbox.value === "bacon") {
-        options.push({ name: "Extra Bacon", price: 15000 })
-      }
-    })
-
-    return options
-  }
-
-  // Promo code functionality
-  applyPromoBtn.addEventListener("click", () => {
-    const promoCode = promoInput.value.trim().toUpperCase()
-    const validPromoCodes = {
-      WELCOME10: { discount: 0.1, description: "Diskon 10%" },
-      NEWUSER: { discount: 0.15, description: "Diskon 15%" },
-      ASCAFE20: { discount: 0.2, description: "Diskon 20%" },
+    init() {
+        this.renderCart();
+        this.setupEventListeners();
+        this.updateSummary();
     }
 
-    if (validPromoCodes[promoCode]) {
-      const promo = validPromoCodes[promoCode]
-      applyDiscount(promo.discount, promo.description)
-      showNotification(`Promo ${promoCode} berhasil diterapkan!`)
-      promoInput.value = ""
-    } else {
-      showNotification("Kode promo tidak valid", "error")
-    }
-  })
+    setupEventListeners() {
+        // Quantity controls
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('qty-btn')) {
+                this.handleQuantityChange(e);
+            }
+            
+            if (e.target.classList.contains('remove-btn')) {
+                this.handleRemoveItem(e);
+            }
+        });
 
-  // Apply discount
-  function applyDiscount(discountPercent, description) {
-    const subtotalElement = document.querySelector(".summary-row:nth-child(1) span:last-child")
-    const subtotal = Number.parseInt(subtotalElement.textContent.replace(/[^\d]/g, ""))
-    const discountAmount = Math.round(subtotal * discountPercent)
+        // Quantity input changes
+        document.addEventListener('change', (e) => {
+            if (e.target.classList.contains('qty-input')) {
+                this.handleQuantityInput(e);
+            }
+        });
 
-    // Add discount row if not exists
-    let discountRow = document.querySelector(".discount-row")
-    if (!discountRow) {
-      discountRow = document.createElement("div")
-      discountRow.className = "summary-row discount-row"
-      discountRow.innerHTML = `<span>${description}</span><span>-Rp ${discountAmount.toLocaleString()}</span>`
+        // Delivery option changes
+        document.addEventListener('change', (e) => {
+            if (e.target.name === 'delivery') {
+                this.handleDeliveryChange(e);
+            }
+        });
 
-      const divider = document.querySelector(".summary-divider")
-      divider.parentNode.insertBefore(discountRow, divider)
-    } else {
-      discountRow.innerHTML = `<span>${description}</span><span>-Rp ${discountAmount.toLocaleString()}</span>`
-    }
+        // Promo code
+        const applyPromoBtn = document.getElementById('applyPromo');
+        if (applyPromoBtn) {
+            applyPromoBtn.addEventListener('click', () => this.applyPromoCode());
+        }
 
-    updateCartTotals()
-  }
-
-  // Delivery option change
-  const deliveryOptions = document.querySelectorAll('input[name="delivery"]')
-  deliveryOptions.forEach((option) => {
-    option.addEventListener("change", () => {
-      updateDeliveryFee()
-    })
-  })
-
-  function updateDeliveryFee() {
-    const selectedDelivery = document.querySelector('input[name="delivery"]:checked').value
-    const deliveryFee = selectedDelivery === "delivery" ? 15000 : 0
-
-    // Update or add delivery fee row
-    let deliveryRow = document.querySelector(".delivery-fee-row")
-    if (!deliveryRow && deliveryFee > 0) {
-      deliveryRow = document.createElement("div")
-      deliveryRow.className = "summary-row delivery-fee-row"
-
-      const serviceRow = document.querySelector(".summary-row:nth-child(2)")
-      serviceRow.parentNode.insertBefore(deliveryRow, serviceRow.nextSibling)
+        // Checkout button
+        const checkoutBtn = document.querySelector('.checkout-btn');
+        if (checkoutBtn) {
+            checkoutBtn.addEventListener('click', () => this.proceedToCheckout());
+        }
     }
 
-    if (deliveryRow) {
-      if (deliveryFee > 0) {
-        deliveryRow.innerHTML = `<span>Biaya Pengiriman</span><span>Rp ${deliveryFee.toLocaleString()}</span>`
-        deliveryRow.style.display = "flex"
-      } else {
-        deliveryRow.style.display = "none"
-      }
+    renderCart() {
+        const cartItemsContainer = document.querySelector('.cart-items');
+        const emptyCart = document.querySelector('.empty-cart');
+        
+        if (this.cart.length === 0) {
+            if (cartItemsContainer) cartItemsContainer.style.display = 'none';
+            if (emptyCart) emptyCart.style.display = 'block';
+            return;
+        }
+
+        if (cartItemsContainer) cartItemsContainer.style.display = 'block';
+        if (emptyCart) emptyCart.style.display = 'none';
+
+        if (!cartItemsContainer) return;
+
+        cartItemsContainer.innerHTML = this.cart.map(item => `
+            <div class="cart-item" data-id="${item.id}">
+                <div class="item-image">
+                    <img src="${item.image}" alt="${item.name}">
+                </div>
+                <div class="item-details">
+                    <h3>${item.name}</h3>
+                    <p>${item.description}</p>
+                    ${this.renderItemOptions(item)}
+                </div>
+                <div class="item-quantity">
+                    <button class="qty-btn minus" data-action="decrease" data-id="${item.id}">-</button>
+                    <input type="number" value="${item.quantity}" min="1" class="qty-input" data-id="${item.id}">
+                    <button class="qty-btn plus" data-action="increase" data-id="${item.id}">+</button>
+                </div>
+                <div class="item-price">
+                    <span class="price">${this.formatCurrency(item.price * item.quantity)}</span>
+                </div>
+                <div class="item-remove">
+                    <button class="remove-btn" data-id="${item.id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `).join('');
     }
 
-    updateCartTotals()
-  }
+    renderItemOptions(item) {
+        if (!item.options) return '';
 
-  // Show empty cart
-  function showEmptyCart() {
-    document.querySelector(".cart-content").style.display = "none"
-    document.querySelector(".empty-cart").style.display = "block"
-  }
-
-  // Checkout functionality
-  checkoutBtn.addEventListener("click", () => {
-    // Get cart data
-    const cartData = {
-      items: getCartItems(),
-      delivery: document.querySelector('input[name="delivery"]:checked').value,
-      total: document.querySelector(".summary-row.total span:last-child").textContent,
+        return `
+            <div class="item-options">
+                ${item.options.map(option => `
+                    <label>
+                        <input type="${option.type}" name="${option.name}" value="${option.value}" ${option.checked ? 'checked' : ''}>
+                        ${option.label}
+                    </label>
+                `).join('')}
+            </div>
+        `;
     }
 
-    // Store in localStorage for checkout page
-    localStorage.setItem("checkoutData", JSON.stringify(cartData))
+    handleQuantityChange(e) {
+        const action = e.target.dataset.action;
+        const itemId = e.target.dataset.id;
+        const item = this.cart.find(item => item.id === itemId);
+        
+        if (!item) return;
 
-    // Redirect to checkout
-    window.location.href = "pembayaran.html"
-  })
+        if (action === 'increase') {
+            item.quantity += 1;
+        } else if (action === 'decrease' && item.quantity > 1) {
+            item.quantity -= 1;
+        }
 
-  // Get cart items data
-  function getCartItems() {
-    const items = []
-    cartItems.forEach((item) => {
-      if (item.style.display !== "none") {
-        const name = item.querySelector("h3").textContent
-        const quantity = Number.parseInt(item.querySelector(".qty-input").value)
-        const price = item.querySelector(".price").textContent
-        const options = getSelectedOptions(item)
+        this.saveCart();
+        this.renderCart();
+        this.updateSummary();
+        this.updateCartCount();
+    }
 
-        items.push({
-          name,
-          quantity,
-          price,
-          options,
-        })
-      }
-    })
-    return items
-  }
+    handleQuantityInput(e) {
+        const itemId = e.target.dataset.id;
+        const newQuantity = parseInt(e.target.value);
+        const item = this.cart.find(item => item.id === itemId);
+        
+        if (!item || newQuantity < 1) return;
 
-  // Notification function
-  function showNotification(message, type = "success") {
-    const notification = document.createElement("div")
-    notification.className = `notification ${type}`
-    notification.textContent = message
+        item.quantity = newQuantity;
+        this.saveCart();
+        this.updateSummary();
+        this.updateCartCount();
+    }
 
-    document.body.appendChild(notification)
+    handleRemoveItem(e) {
+        const itemId = e.target.dataset.id;
+        this.cart = this.cart.filter(item => item.id !== itemId);
+        
+        this.saveCart();
+        this.renderCart();
+        this.updateSummary();
+        this.updateCartCount();
+        
+        this.showNotification('Item berhasil dihapus dari keranjang', 'info');
+    }
 
-    setTimeout(() => {
-      notification.classList.add("show")
-    }, 10)
+    handleDeliveryChange(e) {
+        const deliveryType = e.target.value;
+        const deliverySection = document.getElementById('deliverySection');
+        const pickupSection = document.getElementById('pickupSection');
+        const deliveryFeeRow = document.getElementById('deliveryFeeRow');
+        
+        if (deliveryType === 'delivery') {
+            if (deliverySection) deliverySection.style.display = 'block';
+            if (pickupSection) pickupSection.style.display = 'none';
+            if (deliveryFeeRow) deliveryFeeRow.style.display = 'flex';
+        } else {
+            if (deliverySection) deliverySection.style.display = 'none';
+            if (pickupSection) pickupSection.style.display = 'block';
+            if (deliveryFeeRow) deliveryFeeRow.style.display = 'none';
+        }
+        
+        this.updateSummary();
+    }
 
-    setTimeout(() => {
-      notification.classList.remove("show")
-      setTimeout(() => {
-        document.body.removeChild(notification)
-      }, 300)
-    }, 3000)
-  }
+    applyPromoCode() {
+        const promoInput = document.getElementById('promoInput');
+        const promoCode = promoInput.value.trim().toUpperCase();
+        
+        if (!promoCode) {
+            this.showNotification('Masukkan kode promo terlebih dahulu', 'error');
+            return;
+        }
 
-  // Initialize cart totals
-  updateCartTotals()
-})
+        // Check valid promo codes
+        const validPromos = {
+            'WELCOME10': { discount: 0.1, description: 'Diskon 10% untuk pelanggan baru' },
+            'SAVE20': { discount: 0.2, description: 'Diskon 20% untuk pembelian minimal Rp 100.000' },
+            'COFFEE15': { discount: 0.15, description: 'Diskon 15% untuk menu kopi' }
+        };
+
+        const promo = validPromos[promoCode];
+        if (!promo) {
+            this.showNotification('Kode promo tidak valid', 'error');
+            return;
+        }
+
+        // Apply promo
+        this.appliedPromo = promo;
+        this.appliedPromoCode = promoCode;
+        this.updateSummary();
+        this.showNotification(`Kode promo ${promoCode} berhasil diterapkan!`, 'success');
+        
+        promoInput.value = '';
+    }
+
+    updateSummary() {
+        const subtotal = this.getSubtotal();
+        const serviceFee = 5000;
+        const deliveryFee = this.getDeliveryFee();
+        const tax = Math.round(subtotal * 0.11);
+        const promoDiscount = this.getPromoDiscount(subtotal);
+        const total = subtotal + serviceFee + deliveryFee + tax - promoDiscount;
+
+        // Update summary elements
+        const subtotalEl = document.getElementById('subtotalAmount');
+        if (subtotalEl) subtotalEl.textContent = this.formatCurrency(subtotal);
+
+        const taxEl = document.getElementById('taxAmount');
+        if (taxEl) taxEl.textContent = this.formatCurrency(tax);
+
+        const totalEl = document.getElementById('totalAmount');
+        if (totalEl) totalEl.textContent = this.formatCurrency(total);
+
+        // Update cart summary in sidebar
+        this.updateCartSummary(subtotal, serviceFee, deliveryFee, tax, promoDiscount, total);
+    }
+
+    updateCartSummary(subtotal, serviceFee, deliveryFee, tax, promoDiscount, total) {
+        const summaryRows = document.querySelectorAll('.summary-row');
+        
+        summaryRows.forEach(row => {
+            const label = row.querySelector('span:first-child')?.textContent;
+            const valueEl = row.querySelector('span:last-child');
+            
+            if (!valueEl) return;
+            
+            if (label?.includes('Subtotal')) {
+                valueEl.textContent = this.formatCurrency(subtotal);
+            } else if (label?.includes('PPN')) {
+                valueEl.textContent = this.formatCurrency(tax);
+            } else if (label?.includes('Total')) {
+                valueEl.textContent = this.formatCurrency(total);
+            }
+        });
+
+        // Add promo discount row if applied
+        if (promoDiscount > 0) {
+            this.addPromoDiscountRow(promoDiscount);
+        }
+    }
+
+    addPromoDiscountRow(discount) {
+        const summaryCard = document.querySelector('.summary-card');
+        if (!summaryCard) return;
+
+        // Remove existing promo row
+        const existingPromoRow = summaryCard.querySelector('.promo-discount-row');
+        if (existingPromoRow) existingPromoRow.remove();
+
+        // Add new promo row
+        const promoRow = document.createElement('div');
+        promoRow.className = 'summary-row promo-discount-row';
+        promoRow.innerHTML = `
+            <span>Diskon Promo (${this.appliedPromoCode})</span>
+            <span style="color: #27ae60;">-${this.formatCurrency(discount)}</span>
+        `;
+
+        const totalRow = summaryCard.querySelector('.summary-row.total');
+        if (totalRow) {
+            totalRow.parentNode.insertBefore(promoRow, totalRow);
+        }
+    }
+
+    getSubtotal() {
+        return this.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    }
+
+    getDeliveryFee() {
+        const deliveryOption = document.querySelector('input[name="delivery"]:checked');
+        return deliveryOption?.value === 'delivery' ? 15000 : 0;
+    }
+
+    getPromoDiscount(subtotal) {
+        if (!this.appliedPromo) return 0;
+        return Math.round(subtotal * this.appliedPromo.discount);
+    }
+
+    proceedToCheckout() {
+        if (this.cart.length === 0) {
+            this.showNotification('Keranjang Anda kosong!', 'error');
+            return;
+        }
+
+        // Save cart data for checkout
+        const checkoutData = {
+            items: this.cart,
+            subtotal: this.getSubtotal(),
+            serviceFee: 5000,
+            deliveryFee: this.getDeliveryFee(),
+            tax: Math.round(this.getSubtotal() * 0.11),
+            promoDiscount: this.getPromoDiscount(this.getSubtotal()),
+            appliedPromo: this.appliedPromo,
+            appliedPromoCode: this.appliedPromoCode,
+            deliveryType: document.querySelector('input[name="delivery"]:checked')?.value || 'pickup'
+        };
+
+        localStorage.setItem('checkoutData', JSON.stringify(checkoutData));
+        
+        // Redirect to checkout
+        window.location.href = 'pembayaran.html';
+    }
+
+    saveCart() {
+        localStorage.setItem('cart', JSON.stringify(this.cart));
+    }
+
+    updateCartCount() {
+        const cartCount = this.cart.reduce((total, item) => total + item.quantity, 0);
+        const cartCountElements = document.querySelectorAll('.cart-count');
+        
+        cartCountElements.forEach(element => {
+            element.textContent = cartCount;
+            element.style.display = cartCount > 0 ? 'flex' : 'none';
+        });
+    }
+
+    formatCurrency(amount) {
+        return new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0
+        }).format(amount);
+    }
+
+    showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+            <span>${message}</span>
+        `;
+
+        document.body.appendChild(notification);
+
+        // Show notification
+        setTimeout(() => notification.classList.add('show'), 100);
+
+        // Hide notification after 3 seconds
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+}
+
+// Initialize shopping cart
+const shoppingCart = new ShoppingCart();
+
+// Enhanced cart styles
+const cartStyles = `
+.cart-item {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cart-item:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.item-options {
+    margin-top: 12px;
+}
+
+.item-options label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: #6c757d;
+    cursor: pointer;
+}
+
+.qty-btn {
+    transition: all 0.2s ease;
+}
+
+.qty-btn:hover {
+    background-color: #c8a97e !important;
+    color: #fff !important;
+    transform: scale(1.1);
+}
+
+.remove-btn {
+    transition: all 0.2s ease;
+}
+
+.remove-btn:hover {
+    background-color: #dc3545 !important;
+    transform: scale(1.1);
+}
+
+.promo-discount-row {
+    background-color: #e8f5e8;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin: 8px 0;
+}
+
+.checkout-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.checkout-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.checkout-btn:hover::before {
+    left: 100%;
+}
+
+@media (max-width: 768px) {
+    .cart-item {
+        padding: 16px;
+    }
+}
+`;
+
+// Add cart styles
+const cartStyleSheet = document.createElement('style');
+cartStyleSheet.textContent = cartStyles;
+document.head.appendChild(cartStyleSheet);

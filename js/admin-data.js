@@ -1,617 +1,433 @@
-// Enhanced Data Management for AS CAFE Admin
-class AdminData {
-  constructor() {
-    this.initializeData()
-  }
-
-  initializeData() {
-    // Initialize sample data if not exists
-    if (!localStorage.getItem("asCafeOrders")) {
-      const sampleOrders = [
-        {
-          id: "001",
-          customerName: "Budi Santoso",
-          customerPhone: "081234567890",
-          tableNumber: 5,
-          status: "preparing",
-          items: [
-            { id: "1", name: "Kopi Signature", price: 25000, quantity: 1 },
-            { id: "3", name: "Pasta Carbonara", price: 45000, quantity: 1 },
-          ],
-          total: 120000,
-          createdAt: new Date().toISOString(),
-        },
-        {
-          id: "002",
-          customerName: "Siti Rahma",
-          customerPhone: "081234567891",
-          tableNumber: 3,
-          status: "ready",
-          items: [
-            { id: "2", name: "Cappuccino", price: 35000, quantity: 1 },
-            { id: "4", name: "Tiramisu", price: 40000, quantity: 1 },
-          ],
-          total: 80000,
-          createdAt: new Date(Date.now() - 3600000).toISOString(),
-        },
-        {
-          id: "003",
-          customerName: "Andi Wijaya",
-          customerPhone: "081234567892",
-          tableNumber: 7,
-          status: "completed",
-          items: [
-            { id: "5", name: "Latte", price: 38000, quantity: 1 },
-            { id: "6", name: "Chicken Sandwich", price: 42000, quantity: 1 },
-          ],
-          total: 90000,
-          createdAt: new Date(Date.now() - 7200000).toISOString(),
-        },
-        {
-          id: "004",
-          customerName: "Maya Sari",
-          customerPhone: "081234567893",
-          tableNumber: 2,
-          status: "pending",
-          items: [
-            { id: "7", name: "Americano", price: 30000, quantity: 1 },
-            { id: "8", name: "Caesar Salad", price: 38000, quantity: 1 },
-          ],
-          total: 85000,
-          createdAt: new Date(Date.now() - 1800000).toISOString(),
-        },
-        {
-          id: "005",
-          customerName: "Rudi Hartono",
-          customerPhone: "081234567894",
-          tableNumber: 4,
-          status: "confirmed",
-          items: [
-            { id: "9", name: "Mocha", price: 40000, quantity: 1 },
-            { id: "10", name: "Beef Burger", price: 55000, quantity: 1 },
-          ],
-          total: 108000,
-          createdAt: new Date(Date.now() - 900000).toISOString(),
-        },
-      ]
-      localStorage.setItem("asCafeOrders", JSON.stringify(sampleOrders))
+// Admin Data Management System
+class AdminDataManager {
+    constructor() {
+        this.initializeData();
+        this.setupEventListeners();
     }
 
-    if (!localStorage.getItem("asCafeReservations")) {
-      const sampleReservations = [
-        {
-          id: "1",
-          customerName: "Alice Johnson",
-          customerPhone: "081234567892",
-          customerEmail: "alice@example.com",
-          date: new Date(Date.now() + 86400000).toISOString().split("T")[0],
-          time: "19:00",
-          guests: 4,
-          tableNumber: 7,
-          status: "confirmed",
-          notes: "Birthday celebration",
-          createdAt: new Date().toISOString(),
-        },
-        {
-          id: "2",
-          customerName: "Bob Wilson",
-          customerPhone: "081234567893",
-          customerEmail: "bob@example.com",
-          date: new Date(Date.now() + 172800000).toISOString().split("T")[0],
-          time: "12:30",
-          guests: 2,
-          tableNumber: 2,
-          status: "pending",
-          notes: "Window seat preferred",
-          createdAt: new Date().toISOString(),
-        },
-      ]
-      localStorage.setItem("asCafeReservations", JSON.stringify(sampleReservations))
+    initializeData() {
+        // Initialize default data if not exists
+        if (!localStorage.getItem('adminData')) {
+            const defaultData = {
+                orders: [],
+                products: this.getDefaultProducts(),
+                users: this.getDefaultUsers(),
+                reservations: [],
+                articles: this.getDefaultArticles(),
+                categories: this.getDefaultCategories(),
+                settings: this.getDefaultSettings(),
+                transactions: [],
+                notifications: []
+            };
+            localStorage.setItem('adminData', JSON.stringify(defaultData));
+        }
     }
 
-    if (!localStorage.getItem("asCafeMenu")) {
-      const sampleMenu = [
-        {
-          id: "1",
-          name: "Espresso",
-          price: 25000,
-          category: "coffee",
-          description: "Rich and bold espresso shot",
-          available: true,
-          image: "/placeholder.svg?height=200&width=200",
-        },
-        {
-          id: "2",
-          name: "Cappuccino",
-          price: 35000,
-          category: "coffee",
-          description: "Espresso with steamed milk and foam",
-          available: true,
-          image: "/placeholder.svg?height=200&width=200",
-        },
-        {
-          id: "3",
-          name: "Nasi Goreng",
-          price: 45000,
-          category: "food",
-          description: "Indonesian fried rice with egg",
-          available: true,
-          image: "/placeholder.svg?height=200&width=200",
-        },
-        {
-          id: "4",
-          name: "Sandwich Club",
-          price: 40000,
-          category: "food",
-          description: "Triple layer sandwich with chicken and vegetables",
-          available: true,
-          image: "/placeholder.svg?height=200&width=200",
-        },
-        {
-          id: "5",
-          name: "Latte",
-          price: 38000,
-          category: "coffee",
-          description: "Espresso with steamed milk",
-          available: true,
-          image: "/placeholder.svg?height=200&width=200",
-        },
-        {
-          id: "6",
-          name: "Mie Ayam",
-          price: 35000,
-          category: "food",
-          description: "Chicken noodle soup",
-          available: true,
-          image: "/placeholder.svg?height=200&width=200",
-        },
-      ]
-      localStorage.setItem("asCafeMenu", JSON.stringify(sampleMenu))
+    getDefaultProducts() {
+        return [
+            {
+                id: 'prod_001',
+                name: 'Espresso',
+                category: 'coffee',
+                price: 25000,
+                description: 'Kopi hitam kental dengan cita rasa kuat',
+                image: '/placeholder.svg?height=200&width=300',
+                status: 'available',
+                ingredients: 'Biji kopi arabica premium',
+                calories: 5,
+                preparationTime: 3,
+                tags: ['hot', 'strong', 'classic'],
+                isSpicy: false,
+                isVegetarian: true,
+                isRecommended: true,
+                createdAt: new Date().toISOString()
+            },
+            {
+                id: 'prod_002',
+                name: 'Cappuccino',
+                category: 'coffee',
+                price: 35000,
+                description: 'Espresso dengan steamed milk dan foam yang lembut',
+                image: '/placeholder.svg?height=200&width=300',
+                status: 'available',
+                ingredients: 'Espresso, susu segar, foam',
+                calories: 120,
+                preparationTime: 5,
+                tags: ['hot', 'creamy', 'popular'],
+                isSpicy: false,
+                isVegetarian: true,
+                isRecommended: true,
+                createdAt: new Date().toISOString()
+            },
+            {
+                id: 'prod_003',
+                name: 'Latte',
+                category: 'coffee',
+                price: 35000,
+                description: 'Espresso dengan susu steamed dan sedikit foam',
+                image: '/placeholder.svg?height=200&width=300',
+                status: 'available',
+                ingredients: 'Espresso, susu steamed',
+                calories: 150,
+                preparationTime: 5,
+                tags: ['hot', 'mild', 'creamy'],
+                isSpicy: false,
+                isVegetarian: true,
+                isRecommended: false,
+                createdAt: new Date().toISOString()
+            },
+            {
+                id: 'prod_004',
+                name: 'Americano',
+                category: 'coffee',
+                price: 30000,
+                description: 'Espresso dengan tambahan air panas',
+                image: '/placeholder.svg?height=200&width=300',
+                status: 'available',
+                ingredients: 'Espresso, air panas',
+                calories: 10,
+                preparationTime: 3,
+                tags: ['hot', 'black', 'simple'],
+                isSpicy: false,
+                isVegetarian: true,
+                isRecommended: false,
+                createdAt: new Date().toISOString()
+            },
+            {
+                id: 'prod_005',
+                name: 'Cold Brew',
+                category: 'coffee',
+                price: 30000,
+                description: 'Kopi yang diseduh dengan air dingin selama 12 jam',
+                image: '/placeholder.svg?height=200&width=300',
+                status: 'available',
+                ingredients: 'Biji kopi cold brew, air dingin',
+                calories: 5,
+                preparationTime: 2,
+                tags: ['cold', 'smooth', 'refreshing'],
+                isSpicy: false,
+                isVegetarian: true,
+                isRecommended: true,
+                createdAt: new Date().toISOString()
+            },
+            {
+                id: 'prod_006',
+                name: 'Pasta Carbonara',
+                category: 'food',
+                price: 65000,
+                description: 'Pasta dengan saus krim, telur, dan bacon',
+                image: '/placeholder.svg?height=200&width=300',
+                status: 'available',
+                ingredients: 'Pasta, bacon, telur, krim, keju parmesan',
+                calories: 580,
+                preparationTime: 15,
+                tags: ['hot', 'creamy', 'italian'],
+                isSpicy: false,
+                isVegetarian: false,
+                isRecommended: true,
+                createdAt: new Date().toISOString()
+            },
+            {
+                id: 'prod_007',
+                name: 'Chicken Sandwich',
+                category: 'food',
+                price: 55000,
+                description: 'Sandwich dengan ayam panggang dan sayuran segar',
+                image: '/placeholder.svg?height=200&width=300',
+                status: 'available',
+                ingredients: 'Roti, ayam panggang, selada, tomat, mayo',
+                calories: 450,
+                preparationTime: 10,
+                tags: ['hot', 'protein', 'healthy'],
+                isSpicy: false,
+                isVegetarian: false,
+                isRecommended: false,
+                createdAt: new Date().toISOString()
+            },
+            {
+                id: 'prod_008',
+                name: 'Tiramisu',
+                category: 'dessert',
+                price: 45000,
+                description: 'Dessert Italia dengan lapisan kopi dan mascarpone',
+                image: '/placeholder.svg?height=200&width=300',
+                status: 'available',
+                ingredients: 'Ladyfinger, mascarpone, kopi, cokelat',
+                calories: 320,
+                preparationTime: 5,
+                tags: ['sweet', 'coffee', 'italian'],
+                isSpicy: false,
+                isVegetarian: true,
+                isRecommended: true,
+                createdAt: new Date().toISOString()
+            }
+        ];
     }
 
-    // Add this after the existing menu initialization:
-    if (!localStorage.getItem("asCafeCategories")) {
-      const sampleCategories = [
-        {
-          id: "1",
-          name: "Coffee",
-          description: "Berbagai macam kopi berkualitas",
-          icon: "fas fa-coffee",
-          color: "#8B4513",
-          order: 1,
-          createdAt: new Date().toISOString(),
-        },
-        {
-          id: "2",
-          name: "Food",
-          description: "Makanan lezat dan bergizi",
-          icon: "fas fa-utensils",
-          color: "#FF6B35",
-          order: 2,
-          createdAt: new Date().toISOString(),
-        },
-        {
-          id: "3",
-          name: "Dessert",
-          description: "Pencuci mulut yang manis",
-          icon: "fas fa-ice-cream",
-          color: "#FF69B4",
-          order: 3,
-          createdAt: new Date().toISOString(),
-        },
-        {
-          id: "4",
-          name: "Beverage",
-          description: "Minuman segar non-kopi",
-          icon: "fas fa-glass-whiskey",
-          color: "#4169E1",
-          order: 4,
-          createdAt: new Date().toISOString(),
-        },
-      ]
-      localStorage.setItem("asCafeCategories", JSON.stringify(sampleCategories))
+    getDefaultCategories() {
+        return [
+            {
+                id: 'cat_001',
+                name: 'Coffee',
+                description: 'Berbagai jenis kopi premium',
+                icon: 'fas fa-coffee',
+                color: '#8B4513',
+                order: 1,
+                isActive: true
+            },
+            {
+                id: 'cat_002',
+                name: 'Food',
+                description: 'Makanan utama dan ringan',
+                icon: 'fas fa-utensils',
+                color: '#FF6B35',
+                order: 2,
+                isActive: true
+            },
+            {
+                id: 'cat_003',
+                name: 'Dessert',
+                description: 'Makanan penutup dan kue',
+                icon: 'fas fa-birthday-cake',
+                color: '#FF69B4',
+                order: 3,
+                isActive: true
+            },
+            {
+                id: 'cat_004',
+                name: 'Drinks',
+                description: 'Minuman non-kopi',
+                icon: 'fas fa-glass-water',
+                color: '#4169E1',
+                order: 4,
+                isActive: true
+            }
+        ];
     }
 
-    // Update existing menu items to include categoryId:
-    if (!localStorage.getItem("asCafeMenuUpdated")) {
-      const menu = this.getMenu()
-      const updatedMenu = menu.map((item) => ({
-        ...item,
-        categoryId: item.category === "coffee" ? "1" : "2", // Map existing categories
-        ingredients: item.name.includes("Espresso") ? "Kopi Arabica, Air" : "Bahan berkualitas",
-        preparationTime: 5,
-        recommended: Math.random() > 0.7,
-        spicy: false,
-        vegetarian: !item.name.toLowerCase().includes("ayam") && !item.name.toLowerCase().includes("chicken"),
-      }))
-      this.saveMenu(updatedMenu)
-      localStorage.setItem("asCafeMenuUpdated", "true")
+    getDefaultUsers() {
+        return [
+            {
+                id: 'user_001',
+                name: 'Admin AS CAFE',
+                email: 'admin@ascafe.com',
+                phone: '+62812345678',
+                role: 'admin',
+                status: 'active',
+                joinedAt: new Date().toISOString()
+            }
+        ];
     }
 
-    // Initialize Articles
-    if (!localStorage.getItem("asCafeArticles")) {
-      const sampleArticles = [
-        {
-          id: "1",
-          title: "Menu Baru: Kopi Signature AS CAFE",
-          category: "menu",
-          status: "published",
-          excerpt: "Nikmati cita rasa kopi signature terbaru dari AS CAFE dengan blend khusus yang menggugah selera.",
-          content:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-          image: "/placeholder.svg?height=300&width=400",
-          createdAt: new Date().toISOString(),
-        },
-        {
-          id: "2",
-          title: "Promo Spesial Bulan Ini",
-          category: "promo",
-          status: "published",
-          excerpt: "Dapatkan diskon 20% untuk semua menu makanan setiap hari Senin-Rabu.",
-          content:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-          image: "/placeholder.svg?height=300&width=400",
-          createdAt: new Date(Date.now() - 86400000).toISOString(),
-        },
-      ]
-      localStorage.setItem("asCafeArticles", JSON.stringify(sampleArticles))
+    getDefaultArticles() {
+        return [
+            {
+                id: 'art_001',
+                title: 'Rahasia Kopi yang Sempurna',
+                category: 'tips',
+                excerpt: 'Panduan lengkap untuk membuat kopi yang sempurna di rumah',
+                content: 'Konten artikel lengkap...',
+                image: '/placeholder.svg?height=400&width=800',
+                status: 'published',
+                author: 'Admin AS CAFE',
+                createdAt: new Date().toISOString()
+            }
+        ];
     }
 
-    // Initialize Users
-    if (!localStorage.getItem("asCafeUsers")) {
-      const sampleUsers = [
-        {
-          id: "1",
-          name: "Admin AS CAFE",
-          email: "admin@ascafe.com",
-          phone: "081234567890",
-          role: "admin",
-          status: "active",
-          createdAt: new Date().toISOString(),
-        },
-        {
-          id: "2",
-          name: "Staff Kasir",
-          email: "kasir@ascafe.com",
-          phone: "081234567891",
-          role: "staff",
-          status: "active",
-          createdAt: new Date().toISOString(),
-        },
-      ]
-      localStorage.setItem("asCafeUsers", JSON.stringify(sampleUsers))
+    getDefaultSettings() {
+        return {
+            cafeName: 'AS CAFE',
+            address: 'Jl. Tunjungan No. 26, Surabaya',
+            phone: '+6231 206 0803 0405',
+            email: 'info@ascafe.com',
+            openTime: '08:00',
+            closeTime: '22:00',
+            currency: 'IDR',
+            timezone: 'Asia/Jakarta',
+            language: 'id',
+            notifications: {
+                email: true,
+                orders: true,
+                reservations: true
+            }
+        };
     }
 
-    // Initialize Settings
-    if (!localStorage.getItem("asCafeSettings")) {
-      const defaultSettings = {
-        cafe: {
-          name: "AS CAFE",
-          address: "Jl. Contoh No. 123, Jakarta",
-          phone: "021-12345678",
-          email: "info@ascafe.com",
-          openTime: "07:00",
-          closeTime: "22:00",
-        },
-        system: {
-          currency: "IDR",
-          timezone: "Asia/Jakarta",
-          language: "id",
-        },
-        notifications: {
-          email: true,
-          orders: true,
-          reservations: true,
-        },
-      }
-      localStorage.setItem("asCafeSettings", JSON.stringify(defaultSettings))
-    }
-  }
+    setupEventListeners() {
+        // Listen for cart updates
+        window.addEventListener('cartUpdated', (event) => {
+            this.handleCartUpdate(event.detail);
+        });
 
-  // Orders CRUD
-  getOrders() {
-    return JSON.parse(localStorage.getItem("asCafeOrders") || "[]")
-  }
-
-  saveOrders(orders) {
-    localStorage.setItem("asCafeOrders", JSON.stringify(orders))
-  }
-
-  addOrder(order) {
-    const orders = this.getOrders()
-    order.id = (orders.length + 1).toString().padStart(3, "0")
-    order.createdAt = new Date().toISOString()
-    orders.unshift(order)
-    this.saveOrders(orders)
-    return order
-  }
-
-  updateOrder(orderId, updatedOrder) {
-    const orders = this.getOrders()
-    const index = orders.findIndex((order) => order.id === orderId)
-    if (index !== -1) {
-      orders[index] = { ...orders[index], ...updatedOrder }
-      this.saveOrders(orders)
-      return orders[index]
-    }
-    return null
-  }
-
-  deleteOrder(orderId) {
-    const orders = this.getOrders()
-    const filteredOrders = orders.filter((order) => order.id !== orderId)
-    this.saveOrders(filteredOrders)
-    return true
-  }
-
-  // Reservations CRUD
-  getReservations() {
-    return JSON.parse(localStorage.getItem("asCafeReservations") || "[]")
-  }
-
-  saveReservations(reservations) {
-    localStorage.setItem("asCafeReservations", JSON.stringify(reservations))
-  }
-
-  addReservation(reservation) {
-    const reservations = this.getReservations()
-    reservation.id = Date.now().toString()
-    reservation.createdAt = new Date().toISOString()
-    reservations.unshift(reservation)
-    this.saveReservations(reservations)
-    return reservation
-  }
-
-  updateReservation(reservationId, updatedReservation) {
-    const reservations = this.getReservations()
-    const index = reservations.findIndex((reservation) => reservation.id === reservationId)
-    if (index !== -1) {
-      reservations[index] = { ...reservations[index], ...updatedReservation }
-      this.saveReservations(reservations)
-      return reservations[index]
-    }
-    return null
-  }
-
-  deleteReservation(reservationId) {
-    const reservations = this.getReservations()
-    const filteredReservations = reservations.filter((reservation) => reservation.id !== reservationId)
-    this.saveReservations(filteredReservations)
-    return true
-  }
-
-  // Menu CRUD
-  getMenu() {
-    return JSON.parse(localStorage.getItem("asCafeMenu") || "[]")
-  }
-
-  saveMenu(menu) {
-    localStorage.setItem("asCafeMenu", JSON.stringify(menu))
-  }
-
-  addProduct(product) {
-    const menu = this.getMenu()
-    product.id = Date.now().toString()
-    menu.push(product)
-    this.saveMenu(menu)
-    return product
-  }
-
-  updateProduct(productId, updatedProduct) {
-    const menu = this.getMenu()
-    const index = menu.findIndex((product) => product.id === productId)
-    if (index !== -1) {
-      menu[index] = { ...menu[index], ...updatedProduct }
-      this.saveMenu(menu)
-      return menu[index]
-    }
-    return null
-  }
-
-  deleteProduct(productId) {
-    const menu = this.getMenu()
-    const filteredMenu = menu.filter((product) => product.id !== productId)
-    this.saveMenu(filteredMenu)
-    return true
-  }
-
-  // Articles CRUD
-  getArticles() {
-    return JSON.parse(localStorage.getItem("asCafeArticles") || "[]")
-  }
-
-  saveArticles(articles) {
-    localStorage.setItem("asCafeArticles", JSON.stringify(articles))
-  }
-
-  addArticle(article) {
-    const articles = this.getArticles()
-    article.id = Date.now().toString()
-    article.createdAt = new Date().toISOString()
-    articles.unshift(article)
-    this.saveArticles(articles)
-    return article
-  }
-
-  updateArticle(articleId, updatedArticle) {
-    const articles = this.getArticles()
-    const index = articles.findIndex((article) => article.id === articleId)
-    if (index !== -1) {
-      articles[index] = { ...articles[index], ...updatedArticle }
-      this.saveArticles(articles)
-      return articles[index]
-    }
-    return null
-  }
-
-  deleteArticle(articleId) {
-    const articles = this.getArticles()
-    const filteredArticles = articles.filter((article) => article.id !== articleId)
-    this.saveArticles(filteredArticles)
-    return true
-  }
-
-  // Users CRUD
-  getUsers() {
-    return JSON.parse(localStorage.getItem("asCafeUsers") || "[]")
-  }
-
-  saveUsers(users) {
-    localStorage.setItem("asCafeUsers", JSON.stringify(users))
-  }
-
-  addUser(user) {
-    const users = this.getUsers()
-    user.id = Date.now().toString()
-    user.createdAt = new Date().toISOString()
-    users.push(user)
-    this.saveUsers(users)
-    return user
-  }
-
-  updateUser(userId, updatedUser) {
-    const users = this.getUsers()
-    const index = users.findIndex((user) => user.id === userId)
-    if (index !== -1) {
-      users[index] = { ...users[index], ...updatedUser }
-      this.saveUsers(users)
-      return users[index]
-    }
-    return null
-  }
-
-  deleteUser(userId) {
-    const users = this.getUsers()
-    const filteredUsers = users.filter((user) => user.id !== userId)
-    this.saveUsers(filteredUsers)
-    return true
-  }
-
-  // Settings
-  getSettings() {
-    return JSON.parse(localStorage.getItem("asCafeSettings") || "{}")
-  }
-
-  updateSettings(section, settings) {
-    const allSettings = this.getSettings()
-    allSettings[section] = { ...allSettings[section], ...settings }
-    localStorage.setItem("asCafeSettings", JSON.stringify(allSettings))
-    return allSettings
-  }
-
-  // Utility functions
-  formatCurrency(amount) {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0,
-    })
-      .format(amount)
-      .replace("IDR", "Rp")
-  }
-
-  formatDate(dateString) {
-    return new Date(dateString).toLocaleDateString("id-ID", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    })
-  }
-
-  formatTime(dateString) {
-    return new Date(dateString).toLocaleTimeString("id-ID", {
-      hour: "2-digit",
-      minute: "2-digit",
-    })
-  }
-
-  getStatusBadge(status) {
-    const statusMap = {
-      pending: { class: "status-pending", text: "Pending" },
-      preparing: { class: "status-preparing", text: "Diproses" },
-      ready: { class: "status-ready", text: "Siap" },
-      completed: { class: "status-completed", text: "Selesai" },
-      cancelled: { class: "status-cancelled", text: "Dibatalkan" },
-      confirmed: { class: "status-confirmed", text: "Dikonfirmasi" },
-      active: { class: "status-confirmed", text: "Aktif" },
-      inactive: { class: "status-cancelled", text: "Tidak Aktif" },
-      published: { class: "status-confirmed", text: "Published" },
-      draft: { class: "status-pending", text: "Draft" },
+        // Listen for order creation
+        window.addEventListener('orderCreated', (event) => {
+            this.handleOrderCreation(event.detail);
+        });
     }
 
-    const statusInfo = statusMap[status] || { class: "status-pending", text: status }
-    return `<span class="status-badge ${statusInfo.class}">${statusInfo.text}</span>`
-  }
-
-  // Categories CRUD
-  getCategories() {
-    return JSON.parse(localStorage.getItem("asCafeCategories") || "[]")
-  }
-
-  saveCategories(categories) {
-    localStorage.setItem("asCafeCategories", JSON.stringify(categories))
-  }
-
-  addCategory(category) {
-    const categories = this.getCategories()
-    category.id = Date.now().toString()
-    category.createdAt = new Date().toISOString()
-    categories.push(category)
-    this.saveCategories(categories)
-    return category
-  }
-
-  updateCategory(categoryId, updatedCategory) {
-    const categories = this.getCategories()
-    const index = categories.findIndex((category) => category.id === categoryId)
-    if (index !== -1) {
-      categories[index] = { ...categories[index], ...updatedCategory }
-      this.saveCategories(categories)
-      return categories[index]
+    handleCartUpdate(cartData) {
+        // Update admin dashboard with cart activity
+        this.addNotification({
+            type: 'info',
+            title: 'Aktivitas Keranjang',
+            message: `Item ditambahkan ke keranjang: ${cartData.itemName}`,
+            timestamp: new Date().toISOString()
+        });
     }
-    return null
-  }
 
-  deleteCategory(categoryId) {
-    const categories = this.getCategories()
-    const filteredCategories = categories.filter((category) => category.id !== categoryId)
-    this.saveCategories(filteredCategories)
-    return true
-  }
+    handleOrderCreation(orderData) {
+        // Add order to admin system
+        const adminData = this.getData();
+        const newOrder = {
+            id: this.generateOrderId(),
+            ...orderData,
+            status: 'pending',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
 
-  getCategoryById(categoryId) {
-    const categories = this.getCategories()
-    return categories.find((category) => category.id === categoryId)
-  }
+        adminData.orders.unshift(newOrder);
+        this.saveData(adminData);
 
-  // Enhanced Menu CRUD
-  addMenuItem(menuItem) {
-    const menu = this.getMenu()
-    menuItem.id = Date.now().toString()
-    menuItem.createdAt = new Date().toISOString()
-    menu.push(menuItem)
-    this.saveMenu(menu)
-    return menuItem
-  }
+        // Add notification
+        this.addNotification({
+            type: 'success',
+            title: 'Pesanan Baru',
+            message: `Pesanan baru dari ${orderData.customerName}`,
+            timestamp: new Date().toISOString(),
+            orderId: newOrder.id
+        });
 
-  updateMenuItem(menuItemId, updatedMenuItem) {
-    const menu = this.getMenu()
-    const index = menu.findIndex((item) => item.id === menuItemId)
-    if (index !== -1) {
-      menu[index] = { ...menu[index], ...updatedMenuItem }
-      this.saveMenu(menu)
-      return menu[index]
+        // Trigger dashboard update
+        window.dispatchEvent(new CustomEvent('dashboardUpdate', {
+            detail: { type: 'newOrder', order: newOrder }
+        }));
     }
-    return null
-  }
 
-  deleteMenuItem(menuItemId) {
-    const menu = this.getMenu()
-    const filteredMenu = menu.filter((item) => item.id !== menuItemId)
-    this.saveMenu(filteredMenu)
-    return true
-  }
+    generateOrderId() {
+        const timestamp = Date.now();
+        const random = Math.floor(Math.random() * 1000);
+        return `AS${timestamp}${random}`;
+    }
+
+    addNotification(notification) {
+        const adminData = this.getData();
+        notification.id = `notif_${Date.now()}`;
+        adminData.notifications.unshift(notification);
+        
+        // Keep only last 50 notifications
+        if (adminData.notifications.length > 50) {
+            adminData.notifications = adminData.notifications.slice(0, 50);
+        }
+        
+        this.saveData(adminData);
+        
+        // Update notification badge
+        this.updateNotificationBadge();
+    }
+
+    updateNotificationBadge() {
+        const badge = document.getElementById('notificationBadge');
+        if (badge) {
+            const unreadCount = this.getUnreadNotificationCount();
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+    }
+
+    getUnreadNotificationCount() {
+        const adminData = this.getData();
+        return adminData.notifications.filter(n => !n.read).length;
+    }
+
+    getData() {
+        return JSON.parse(localStorage.getItem('adminData') || '{}');
+    }
+
+    saveData(data) {
+        localStorage.setItem('adminData', JSON.stringify(data));
+    }
+
+    // Public methods for accessing data
+    getOrders() {
+        return this.getData().orders || [];
+    }
+
+    getProducts() {
+        return this.getData().products || [];
+    }
+
+    getCategories() {
+        return this.getData().categories || [];
+    }
+
+    getUsers() {
+        return this.getData().users || [];
+    }
+
+    getArticles() {
+        return this.getData().articles || [];
+    }
+
+    getSettings() {
+        return this.getData().settings || {};
+    }
+
+    getNotifications() {
+        return this.getData().notifications || [];
+    }
+
+    // CRUD operations
+    addProduct(product) {
+        const adminData = this.getData();
+        product.id = `prod_${Date.now()}`;
+        product.createdAt = new Date().toISOString();
+        adminData.products.push(product);
+        this.saveData(adminData);
+        return product;
+    }
+
+    updateProduct(id, updates) {
+        const adminData = this.getData();
+        const index = adminData.products.findIndex(p => p.id === id);
+        if (index !== -1) {
+            adminData.products[index] = { ...adminData.products[index], ...updates };
+            this.saveData(adminData);
+            return adminData.products[index];
+        }
+        return null;
+    }
+
+    deleteProduct(id) {
+        const adminData = this.getData();
+        adminData.products = adminData.products.filter(p => p.id !== id);
+        this.saveData(adminData);
+    }
+
+    updateOrderStatus(orderId, status) {
+        const adminData = this.getData();
+        const order = adminData.orders.find(o => o.id === orderId);
+        if (order) {
+            order.status = status;
+            order.updatedAt = new Date().toISOString();
+            this.saveData(adminData);
+            
+            // Add notification
+            this.addNotification({
+                type: 'info',
+                title: 'Status Pesanan Diperbarui',
+                message: `Pesanan ${orderId} diubah ke ${status}`,
+                timestamp: new Date().toISOString(),
+                orderId: orderId
+            });
+        }
+    }
 }
 
-// Initialize global data manager
-const adminData = new AdminData()
+// Initialize admin data manager
+window.adminDataManager = new AdminDataManager();
