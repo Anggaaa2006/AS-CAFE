@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Produk - AS CAFE Admin</title>
+    <link rel="stylesheet" href="css/admin-style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-coffee"></i> AS CAFE</h2>
+                <p>Admin Panel</p>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="admin-dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="admin-articles.html"><i class="fas fa-newspaper"></i> Kelola Artikel</a></li>
+                <li><a href="admin-products.html" class="active"><i class="fas fa-box"></i> Kelola Produk</a></li>
+                <li><a href="admin-users.html"><i class="fas fa-users"></i> Kelola Pengguna</a></li>
+                <li><a href="admin-transactions.html"><i class="fas fa-receipt"></i> Kelola Transaksi</a></li>
+                <li><a href="admin-reservations.html"><i class="fas fa-calendar"></i> Reservasi</a></li>
+                <li><a href="admin-reports.html"><i class="fas fa-chart-bar"></i> Laporan</a></li>
+                <li><a href="admin-settings.html"><i class="fas fa-cog"></i> Pengaturan</a></li>
+                <li><a href="index.html" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <h1>Kelola Produk</h1>
+                <button class="btn btn-primary" onclick="showProductForm()">
+                    <i class="fas fa-plus"></i> Tambah Produk
+                </button>
+            </header>
+
+            <!-- Search and Filter -->
+            <div class="search-section">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchProducts" placeholder="Cari produk berdasarkan nama atau kategori...">
+                </div>
+                <select id="categoryFilter" onchange="filterProducts()">
+                    <option value="">Semua Kategori</option>
+                    <option value="coffee">Coffee</option>
+                    <option value="food">Food</option>
+                    <option value="dessert">Dessert</option>
+                    <option value="beverage">Beverage</option>
+                </select>
+                <select id="statusFilter" onchange="filterProducts()">
+                    <option value="">Semua Status</option>
+                    <option value="available">Tersedia</option>
+                    <option value="unavailable">Tidak Tersedia</option>
+                </select>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="products-container">
+                <div id="productsList" class="products-grid">
+                    <!-- Products will be loaded here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Product Form Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Tambah Produk Baru</h3>
+                <span class="close" onclick="closeProductModal()">&times;</span>
+            </div>
+            <form id="productForm" class="modal-body">
+                <div class="form-group">
+                    <label for="productName">Nama Produk:</label>
+                    <input type="text" id="productName" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productCategory">Kategori:</label>
+                        <select id="productCategory" required>
+                            <option value="">Pilih Kategori</option>
+                            <option value="coffee">Coffee</option>
+                            <option value="food">Food</option>
+                            <option value="dessert">Dessert</option>
+                            <option value="beverage">Beverage</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Harga:</label>
+                        <input type="number" id="productPrice" min="0" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="productDescription">Deskripsi:</label>
+                    <textarea id="productDescription" rows="3" placeholder="Deskripsi produk..."></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productImage">URL Gambar:</label>
+                        <input type="url" id="productImage" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label for="productStatus">Status:</label>
+                        <select id="productStatus">
+                            <option value="available">Tersedia</option>
+                            <option value="unavailable">Tidak Tersedia</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeProductModal()">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Produk</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/admin-data.js"></script>
+    <script src="js/admin-products.js"></script>
+</body>
+</html>
