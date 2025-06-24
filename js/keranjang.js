@@ -9,6 +9,18 @@ class ShoppingCart {
         this.renderCart();
         this.setupEventListeners();
         this.updateSummary();
+        this.loadCheckoutData();
+    }
+
+    loadCheckoutData() {
+        // Load checkout data if available
+        const checkoutData = JSON.parse(localStorage.getItem('checkoutData'));
+        if (checkoutData && checkoutData.items) {
+            this.cart = checkoutData.items;
+            this.saveCart();
+            this.renderCart();
+            this.updateSummary();
+        }
     }
 
     setupEventListeners() {
@@ -124,6 +136,7 @@ class ShoppingCart {
         this.renderCart();
         this.updateSummary();
         this.updateCartCount();
+        this.notifyAdmin('cartUpdate', { action, item });
     }
 
     handleQuantityInput(e) {
@@ -137,10 +150,13 @@ class ShoppingCart {
         this.saveCart();
         this.updateSummary();
         this.updateCartCount();
+        this.notifyAdmin('cartUpdate', { action: 'quantityChange', item });
     }
 
     handleRemoveItem(e) {
         const itemId = e.target.dataset.id;
+        const item = this.cart.find(item => item.id === itemId);
+        
         this.cart = this.cart.filter(item => item.id !== itemId);
         
         this.saveCart();
@@ -149,6 +165,7 @@ class ShoppingCart {
         this.updateCartCount();
         
         this.showNotification('Item berhasil dihapus dari keranjang', 'info');
+        this.notifyAdmin('cartUpdate', { action: 'remove', item });
     }
 
     handleDeliveryChange(e) {
@@ -199,6 +216,7 @@ class ShoppingCart {
         this.showNotification(`Kode promo ${promoCode} berhasil diterapkan!`, 'success');
         
         promoInput.value = '';
+        this.notifyAdmin('promoApplied', { code: promoCode, promo });
     }
 
     updateSummary() {
@@ -304,8 +322,51 @@ class ShoppingCart {
 
         localStorage.setItem('checkoutData', JSON.stringify(checkoutData));
         
+        // Notify admin about checkout
+        this.notifyAdmin('checkout', checkoutData);
+        
         // Redirect to checkout
         window.location.href = 'pembayaran.html';
+    }
+
+    notifyAdmin(action, data) {
+        // Send notification to admin system
+        if (window.adminDataManager) {
+            let message = '';
+            let type = 'info';
+            
+            switch (action) {
+                case 'cartUpdate':
+                    message = `Keranjang diperbarui: ${data.item.name}`;
+                    break;
+                case 'promoApplied':
+                    message = `Kode promo ${data.code} diterapkan`;
+                    type = 'success';
+                    break;
+                case 'checkout':
+                    message = `Pelanggan melanjutkan ke checkout dengan ${data.items.length} item`;
+                    type = 'warning';
+                    break;
+            }
+            
+            window.adminDataManager.addNotification({
+                type: type,
+                title: 'Aktivitas Keranjang',
+                message: message,
+                timestamp: new Date().toISOString(),
+                data: data
+            });
+        }
+
+        // Trigger cart update event
+        window.dispatchEvent(new CustomEvent('cartUpdated', {
+            detail: {
+                action: action,
+                data: data,
+                cartTotal: this.getSubtotal(),
+                itemCount: this.cart.length
+            }
+        }));
     }
 
     saveCart() {
@@ -363,10 +424,13 @@ const cartStyles = `
     margin-bottom: 20px;
     background: #fff;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid transparent;
 }
 
 .cart-item:hover {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    border-left-color: #c8a97e;
+    transform: translateX(5px);
 }
 
 .item-options {
@@ -381,25 +445,34 @@ const cartStyles = `
     font-size: 0.9rem;
     color: #6c757d;
     cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.item-options label:hover {
+    color: #c8a97e;
 }
 
 .qty-btn {
     transition: all 0.2s ease;
+    border-radius: 6px;
 }
 
 .qty-btn:hover {
     background-color: #c8a97e !important;
     color: #fff !important;
     transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(200, 169, 126, 0.3);
 }
 
 .remove-btn {
     transition: all 0.2s ease;
+    border-radius: 6px;
 }
 
 .remove-btn:hover {
     background-color: #dc3545 !important;
     transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
 }
 
 .promo-discount-row {
@@ -407,11 +480,14 @@ const cartStyles = `
     padding: 8px 12px;
     border-radius: 6px;
     margin: 8px 0;
+    border-left: 3px solid #27ae60;
 }
 
 .checkout-btn {
     position: relative;
     overflow: hidden;
+    background: linear-gradient(135deg, #c8a97e 0%, #b89669 100%);
+    transition: all 0.3s ease;
 }
 
 .checkout-btn::before {
@@ -425,13 +501,44 @@ const cartStyles = `
     transition: left 0.5s;
 }
 
+.checkout-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(200, 169, 126, 0.4);
+}
+
 .checkout-btn:hover::before {
     left: 100%;
+}
+
+.summary-card {
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+    border: 1px solid #e9ecef;
+}
+
+.summary-row {
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.summary-row:last-child {
+    border-bottom: none;
+}
+
+.summary-row.total {
+    background: linear-gradient(135deg, #c8a97e 0%, #b89669 100%);
+    color: white;
+    padding: 15px;
+    margin: 15px -30px -30px -30px;
+    border-radius: 0 0 10px 10px;
 }
 
 @media (max-width: 768px) {
     .cart-item {
         padding: 16px;
+    }
+    
+    .cart-item:hover {
+        transform: none;
     }
 }
 `;

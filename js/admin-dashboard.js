@@ -17,6 +17,7 @@ class AdminDashboard {
         this.loadRecentOrders();
         this.setupNotifications();
         this.startRealTimeUpdates();
+        this.setupCartMonitoring();
     }
 
     setupEventListeners() {
@@ -25,11 +26,242 @@ class AdminDashboard {
             this.handleDashboardUpdate(event.detail);
         });
 
+        // Listen for cart activities
+        window.addEventListener('cartUpdated', (event) => {
+            this.handleCartActivity(event.detail);
+        });
+
+        // Listen for menu activities
+        window.addEventListener('menuActivity', (event) => {
+            this.handleMenuActivity(event.detail);
+        });
+
         // Refresh button
         const refreshBtn = document.getElementById('refreshDashboard');
         if (refreshBtn) {
             refreshBtn.addEventListener('click', () => this.refreshDashboard());
         }
+    }
+
+    setupCartMonitoring() {
+        // Monitor cart activities in real-time
+        setInterval(() => {
+            this.checkCartActivities();
+        }, 5000); // Check every 5 seconds
+    }
+
+    checkCartActivities() {
+        // Check for recent cart activities
+        const recentActivities = this.getRecentCartActivities();
+        if (recentActivities.length > 0) {
+            this.updateCartActivityStats(recentActivities);
+        }
+    }
+
+    getRecentCartActivities() {
+        // Get cart activities from the last 5 minutes
+        const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+        const notifications = window.adminDataManager?.getNotifications() || [];
+        
+        return notifications.filter(notification => 
+            notification.title === 'Aktivitas Keranjang' &&
+            new Date(notification.timestamp) > fiveMinutesAgo
+        );
+    }
+
+    updateCartActivityStats(activities) {
+        // Update dashboard with cart activity insights
+        const cartActivityCard = document.getElementById('cartActivityCard');
+        if (cartActivityCard) {
+            const count = activities.length;
+            cartActivityCard.querySelector('.stat-number').textContent = count;
+        }
+    }
+
+    handleCartActivity(data) {
+        // Handle real-time cart activities
+        console.log('Cart Activity:', data);
+        
+        // Update live cart statistics
+        this.updateLiveCartStats(data);
+        
+        // Show real-time notification
+        this.showLiveNotification(`Aktivitas Keranjang: ${data.action}`, 'info');
+        
+        // Update recent activities
+        this.addToRecentActivities({
+            type: 'cart',
+            action: data.action,
+            data: data,
+            timestamp: new Date().toISOString()
+        });
+    }
+
+    handleMenuActivity(data) {
+        // Handle menu page activities
+        console.log('Menu Activity:', data);
+        
+        if (data.action === 'productAddedToCart') {
+            this.updateProductPopularity(data.data.product);
+        }
+        
+        // Add to activity feed
+        this.addToRecentActivities({
+            type: 'menu',
+            action: data.action,
+            data: data.data,
+            timestamp: new Date().toISOString()
+        });
+    }
+
+    updateLiveCartStats(data) {
+        // Update live statistics based on cart activity
+        const liveStatsContainer = document.getElementById('liveCartStats');
+        if (!liveStatsContainer) {
+            this.createLiveStatsContainer();
+        }
+        
+        // Update cart activity counter
+        const activityCounter = document.getElementById('cartActivityCounter');
+        if (activityCounter) {
+            const currentCount = parseInt(activityCounter.textContent) || 0;
+            activityCounter.textContent = currentCount + 1;
+        }
+    }
+
+    createLiveStatsContainer() {
+        // Create live stats container if it doesn't exist
+        const statsGrid = document.querySelector('.stats-grid');
+        if (!statsGrid) return;
+        
+        const liveStatsCard = document.createElement('div');
+        liveStatsCard.className = 'stat-card';
+        liveStatsCard.id = 'liveCartStats';
+        liveStatsCard.innerHTML = `
+            <div class="stat-icon">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <div class="stat-info">
+                <h3 id="cartActivityCounter">0</h3>
+                <p>Aktivitas Keranjang Live</p>
+                <span class="stat-change positive">Real-time</span>
+            </div>
+        `;
+        
+        statsGrid.appendChild(liveStatsCard);
+    }
+
+    updateProductPopularity(product) {
+        // Track product popularity
+        const popularProducts = JSON.parse(localStorage.getItem('popularProducts')) || {};
+        
+        if (!popularProducts[product.id]) {
+            popularProducts[product.id] = {
+                name: product.name,
+                category: product.category,
+                addToCartCount: 0
+            };
+        }
+        
+        popularProducts[product.id].addToCartCount += 1;
+        localStorage.setItem('popularProducts', JSON.stringify(popularProducts));
+        
+        // Update popular product display
+        this.updatePopularProductDisplay();
+    }
+
+    updatePopularProductDisplay() {
+        const popularProducts = JSON.parse(localStorage.getItem('popularProducts')) || {};
+        const sortedProducts = Object.entries(popularProducts)
+            .sort(([,a], [,b]) => b.addToCartCount - a.addToCartCount)
+            .slice(0, 5);
+        
+        const popularProductsList = document.getElementById('popularProductsList');
+        if (popularProductsList && sortedProducts.length > 0) {
+            popularProductsList.innerHTML = sortedProducts.map(([id, product]) => `
+                <div class="popular-product-item">
+                    <span class="product-name">${product.name}</span>
+                    <span class="add-count">${product.addToCartCount}x</span>
+                </div>
+            `).join('');
+        }
+    }
+
+    addToRecentActivities(activity) {
+        // Add activity to recent activities feed
+        const recentActivities = JSON.parse(localStorage.getItem('recentActivities')) || [];
+        recentActivities.unshift(activity);
+        
+        // Keep only last 50 activities
+        if (recentActivities.length > 50) {
+            recentActivities.splice(50);
+        }
+        
+        localStorage.setItem('recentActivities', JSON.stringify(recentActivities));
+        this.updateRecentActivitiesDisplay();
+    }
+
+    updateRecentActivitiesDisplay() {
+        const recentActivities = JSON.parse(localStorage.getItem('recentActivities')) || [];
+        const activitiesList = document.getElementById('recentActivitiesList');
+        
+        if (activitiesList && recentActivities.length > 0) {
+            activitiesList.innerHTML = recentActivities.slice(0, 10).map(activity => `
+                <div class="activity-item">
+                    <div class="activity-icon ${activity.type}">
+                        <i class="fas fa-${activity.type === 'cart' ? 'shopping-cart' : 'utensils'}"></i>
+                    </div>
+                    <div class="activity-content">
+                        <p class="activity-description">${this.getActivityDescription(activity)}</p>
+                        <span class="activity-time">${this.formatTimeAgo(activity.timestamp)}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+    }
+
+    getActivityDescription(activity) {
+        switch (activity.action) {
+            case 'cartUpdate':
+                return `Item keranjang diperbarui`;
+            case 'checkout':
+                return `Pelanggan melanjutkan ke checkout`;
+            case 'productAddedToCart':
+                return `${activity.data.product?.name || 'Produk'} ditambahkan ke keranjang`;
+            case 'categoryChanged':
+                return `Kategori menu diubah ke ${activity.data.category}`;
+            default:
+                return `Aktivitas: ${activity.action}`;
+        }
+    }
+
+    showLiveNotification(message, type = 'info') {
+        // Show live notification in admin panel
+        const notification = document.createElement('div');
+        notification.className = `live-notification ${type}`;
+        notification.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+            <span>${message}</span>
+            <button class="close-notification" onclick="this.parentElement.remove()">×</button>
+        `;
+        
+        // Add to notification area
+        let notificationArea = document.getElementById('liveNotificationArea');
+        if (!notificationArea) {
+            notificationArea = document.createElement('div');
+            notificationArea.id = 'liveNotificationArea';
+            notificationArea.className = 'live-notification-area';
+            document.body.appendChild(notificationArea);
+        }
+        
+        notificationArea.appendChild(notification);
+        
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+            if (notification.parentElement) {
+                notification.remove();
+            }
+        }, 5000);
     }
 
     loadDashboardData() {
@@ -448,6 +680,8 @@ class AdminDashboard {
         this.updateStats();
         this.loadRecentOrders();
         this.setupNotifications();
+        this.updateRecentActivitiesDisplay();
+        this.updatePopularProductDisplay();
         this.showToast('Dashboard berhasil diperbarui', 'success');
     }
 
@@ -535,106 +769,123 @@ class AdminDashboard {
 // Initialize admin dashboard
 const adminDashboard = new AdminDashboard();
 
-// Additional styles for dashboard
-const dashboardStyles = `
-.order-items-summary {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+// Additional styles for live features
+const liveFeatureStyles = `
+.live-notification-area {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 1002;
+    max-width: 350px;
 }
 
-.item-name {
-    font-size: 0.9rem;
-    color: #2c3e50;
-}
-
-.more-items {
-    font-size: 0.8rem;
-    color: #6c757d;
-    font-style: italic;
-}
-
-.action-buttons {
-    display: flex;
-    gap: 5px;
-}
-
-.order-detail-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-    margin-bottom: 30px;
-}
-
-.order-detail-grid h4 {
-    color: #2c3e50;
-    margin-bottom: 15px;
-    font-size: 1.1rem;
-}
-
-.order-detail-grid p {
-    margin-bottom: 8px;
-    color: #6c757d;
-}
-
-.order-items-detail {
-    margin-bottom: 30px;
-}
-
-.items-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-}
-
-.items-table th,
-.items-table td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #e9ecef;
-}
-
-.items-table th {
-    background-color: #f8f9fa;
-    font-weight: 600;
-    color: #2c3e50;
-}
-
-.items-table tfoot .total-row {
-    background-color: #f8f9fa;
-    font-weight: 600;
-}
-
-.order-actions {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-    padding: 20px;
-    background-color: #f8f9fa;
+.live-notification {
+    background: white;
+    padding: 12px 16px;
     border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-left: 4px solid #3498db;
+    animation: slideInRight 0.3s ease;
 }
 
-.status-select {
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 0.9rem;
+.live-notification.success {
+    border-left-color: #27ae60;
+    color: #27ae60;
 }
 
-@media (max-width: 768px) {
-    .order-detail-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
+.live-notification.error {
+    border-left-color: #e74c3c;
+    color: #e74c3c;
+}
+
+.close-notification {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: auto;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.activity-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.activity-icon.cart {
+    background: #e8f4fd;
+    color: #3498db;
+}
+
+.activity-icon.menu {
+    background: #e8f5e8;
+    color: #27ae60;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-description {
+    margin: 0 0 4px 0;
+    font-size: 14px;
+    color: #2c3e50;
+}
+
+.activity-time {
+    font-size: 12px;
+    color: #95a5a6;
+}
+
+.popular-product-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.product-name {
+    font-size: 14px;
+    color: #2c3e50;
+}
+
+.add-count {
+    font-size: 12px;
+    color: #27ae60;
+    font-weight: 600;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
     }
-    
-    .order-actions {
-        flex-direction: column;
-        align-items: stretch;
+    to {
+        transform: translateX(0);
+        opacity: 1;
     }
 }
 `;
 
-// Add dashboard styles
-const dashboardStyleSheet = document.createElement('style');
-dashboardStyleSheet.textContent = dashboardStyles;
-document.head.appendChild(dashboardStyleSheet);
+// Add live feature styles
+const liveStyleSheet = document.createElement('style');
+liveStyleSheet.textContent = liveFeatureStyles;
+document.head.appendChild(liveStyleSheet);
