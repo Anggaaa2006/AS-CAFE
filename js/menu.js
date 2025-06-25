@@ -1,4 +1,4 @@
-// Enhanced Menu Page JavaScript
+// Enhanced Menu Page JavaScript with Admin Integration
 class MenuManager {
     constructor() {
         this.products = [];
@@ -14,16 +14,55 @@ class MenuManager {
         this.renderCategories();
         this.renderProducts();
         this.setupCartConnection();
+        this.setupAdminSync();
     }
 
     loadData() {
+        // Load from admin data first
         if (window.adminDataManager) {
             this.products = window.adminDataManager.getProducts();
             this.categories = window.adminDataManager.getCategories();
         } else {
-            // Fallback data
-            this.products = this.getDefaultProducts();
+            // Check for synced web products
+            const webProducts = JSON.parse(localStorage.getItem('webMenuProducts') || 'null');
+            if (webProducts) {
+                this.products = webProducts;
+            } else {
+                this.products = this.getDefaultProducts();
+            }
             this.categories = this.getDefaultCategories();
+        }
+    }
+
+    setupAdminSync() {
+        // Listen for admin product updates
+        window.addEventListener('menuProductsUpdated', (event) => {
+            this.products = event.detail;
+            this.renderProducts();
+            this.showNotification('Menu telah diperbarui oleh admin', 'info');
+        });
+
+        // Listen for admin data updates
+        window.addEventListener('adminDataUpdated', (event) => {
+            if (event.detail.products) {
+                this.products = event.detail.products;
+                this.renderProducts();
+            }
+        });
+
+        // Periodic sync with admin data
+        setInterval(() => {
+            this.syncWithAdmin();
+        }, 10000); // Sync every 10 seconds
+    }
+
+    syncWithAdmin() {
+        if (window.adminDataManager) {
+            const adminProducts = window.adminDataManager.getProducts();
+            if (JSON.stringify(adminProducts) !== JSON.stringify(this.products)) {
+                this.products = adminProducts;
+                this.renderProducts();
+            }
         }
     }
 
@@ -189,6 +228,12 @@ class MenuManager {
         
         if (!product) return;
 
+        // Check if product is available
+        if (product.status !== 'available') {
+            this.showNotification('Produk ini sedang tidak tersedia', 'error');
+            return;
+        }
+
         // Add visual feedback
         const button = e.target.closest('.add-to-cart');
         this.addToCartAnimation(button);
@@ -218,11 +263,13 @@ class MenuManager {
         // Change to success state
         button.classList.add('success');
         button.innerHTML = '<i class="fas fa-check"></i> Ditambahkan!';
+        button.disabled = true;
         
         // Reset after animation
         setTimeout(() => {
             button.classList.remove('success');
             button.innerHTML = originalContent;
+            button.disabled = false;
         }, 1500);
     }
 
@@ -248,7 +295,8 @@ class MenuManager {
             image,
             description,
             category,
-            quantity: 1
+            quantity: 1,
+            status: 'available'
         };
     }
 
@@ -265,6 +313,14 @@ class MenuManager {
         
         localStorage.setItem('cart', JSON.stringify(cart));
         this.updateCartCount(cart);
+        
+        // Trigger storage event for admin sync
+        window.dispatchEvent(new StorageEvent('storage', {
+            key: 'cart',
+            newValue: JSON.stringify(cart),
+            oldValue: null,
+            storageArea: localStorage
+        }));
     }
 
     updateCartCount(cart) {
@@ -354,12 +410,13 @@ class MenuManager {
                  style="animation-delay: ${index * 0.1}s">
                 <div class="menu-image">
                     <img src="${product.image}" alt="${product.name}" loading="lazy">
+                    ${product.status !== 'available' ? '<div class="unavailable-overlay">Tidak Tersedia</div>' : ''}
                 </div>
                 <div class="menu-info">
                     <h3>${product.name}</h3>
                     <p class="menu-description">${product.description}</p>
                     <div class="menu-price">Rp ${this.formatPrice(product.price)}</div>
-                    <button class="add-to-cart enhanced-btn">
+                    <button class="add-to-cart enhanced-btn" ${product.status !== 'available' ? 'disabled' : ''}>
                         <i class="fas fa-plus"></i>
                         <span>Tambah ke Keranjang</span>
                     </button>
@@ -444,7 +501,23 @@ class MenuManager {
             window.app.showNotification(message, type);
         } else {
             // Fallback notification
-            console.log(`${type.toUpperCase()}: ${message}`);
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+
+            document.body.appendChild(notification);
+
+            // Show notification
+            setTimeout(() => notification.classList.add('show'), 100);
+
+            // Hide notification after 3 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
         }
     }
 }
@@ -488,6 +561,33 @@ const enhancedMenuStyles = `
     z-index: 1;
 }
 
+.unavailable-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.add-to-cart:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.add-to-cart:disabled:hover {
+    background-color: #ccc;
+    transform: none;
+    box-shadow: none;
+}
+
 /* Floating Action Button Style for Mobile */
 @media (max-width: 768px) {
     .add-to-cart {
@@ -526,6 +626,52 @@ const enhancedMenuStyles = `
     background: linear-gradient(135deg, #c8a97e 0%, #b89669 100%);
     color: white;
     box-shadow: 0 8px 25px rgba(200, 169, 126, 0.4);
+}
+
+/* Notification styles */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+    z-index: 1001;
+    max-width: 350px;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification-success {
+    border-left: 4px solid #27ae60;
+    color: #27ae60;
+}
+
+.notification-error {
+    border-left: 4px solid #e74c3c;
+    color: #e74c3c;
+}
+
+.notification-info {
+    border-left: 4px solid #3498db;
+    color: #3498db;
+}
+
+.notification i {
+    font-size: 18px;
+}
+
+.notification span {
+    flex: 1;
+    font-weight: 500;
 }
 `;
 

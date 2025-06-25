@@ -1,4 +1,4 @@
-// Shopping Cart JavaScript
+// Enhanced Shopping Cart JavaScript with proper remove functionality
 class ShoppingCart {
     constructor() {
         this.cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -10,6 +10,7 @@ class ShoppingCart {
         this.setupEventListeners();
         this.updateSummary();
         this.loadCheckoutData();
+        this.updateCartCount();
     }
 
     loadCheckoutData() {
@@ -30,7 +31,7 @@ class ShoppingCart {
                 this.handleQuantityChange(e);
             }
             
-            if (e.target.classList.contains('remove-btn')) {
+            if (e.target.classList.contains('remove-btn') || e.target.closest('.remove-btn')) {
                 this.handleRemoveItem(e);
             }
         });
@@ -96,7 +97,7 @@ class ShoppingCart {
                     <span class="price">${this.formatCurrency(item.price * item.quantity)}</span>
                 </div>
                 <div class="item-remove">
-                    <button class="remove-btn" data-id="${item.id}">
+                    <button class="remove-btn" data-id="${item.id}" title="Hapus item">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
@@ -144,7 +145,10 @@ class ShoppingCart {
         const newQuantity = parseInt(e.target.value);
         const item = this.cart.find(item => item.id === itemId);
         
-        if (!item || newQuantity < 1) return;
+        if (!item || newQuantity < 1) {
+            e.target.value = item ? item.quantity : 1;
+            return;
+        }
 
         item.quantity = newQuantity;
         this.saveCart();
@@ -154,18 +158,30 @@ class ShoppingCart {
     }
 
     handleRemoveItem(e) {
-        const itemId = e.target.dataset.id;
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const button = e.target.closest('.remove-btn');
+        if (!button) return;
+        
+        const itemId = button.dataset.id;
         const item = this.cart.find(item => item.id === itemId);
         
-        this.cart = this.cart.filter(item => item.id !== itemId);
+        if (!item) return;
         
-        this.saveCart();
-        this.renderCart();
-        this.updateSummary();
-        this.updateCartCount();
-        
-        this.showNotification('Item berhasil dihapus dari keranjang', 'info');
-        this.notifyAdmin('cartUpdate', { action: 'remove', item });
+        // Show confirmation
+        if (confirm(`Hapus ${item.name} dari keranjang?`)) {
+            // Remove item from cart
+            this.cart = this.cart.filter(cartItem => cartItem.id !== itemId);
+            
+            this.saveCart();
+            this.renderCart();
+            this.updateSummary();
+            this.updateCartCount();
+            
+            this.showNotification(`${item.name} berhasil dihapus dari keranjang`, 'success');
+            this.notifyAdmin('cartUpdate', { action: 'remove', item });
+        }
     }
 
     handleDeliveryChange(e) {
@@ -371,6 +387,14 @@ class ShoppingCart {
 
     saveCart() {
         localStorage.setItem('cart', JSON.stringify(this.cart));
+        
+        // Trigger storage event for admin sync
+        window.dispatchEvent(new StorageEvent('storage', {
+            key: 'cart',
+            newValue: JSON.stringify(this.cart),
+            oldValue: null,
+            storageArea: localStorage
+        }));
     }
 
     updateCartCount() {
@@ -467,12 +491,17 @@ const cartStyles = `
 .remove-btn {
     transition: all 0.2s ease;
     border-radius: 6px;
+    cursor: pointer;
 }
 
 .remove-btn:hover {
     background-color: #dc3545 !important;
     transform: scale(1.1);
     box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+.remove-btn:hover i {
+    color: white;
 }
 
 .promo-discount-row {
