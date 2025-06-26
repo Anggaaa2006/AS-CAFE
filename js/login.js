@@ -1,414 +1,263 @@
-// Enhanced Login System with Registration
-class AuthSystem {
-    constructor() {
-        this.users = JSON.parse(localStorage.getItem('users')) || [];
-        this.currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
-        this.init();
+document.addEventListener("DOMContentLoaded", () => {
+  // Tab switching functionality
+  const tabBtns = document.querySelectorAll(".tab-btn")
+  const authForms = document.querySelectorAll(".auth-form")
+
+  tabBtns.forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const targetTab = this.getAttribute("data-tab")
+
+      // Remove active class from all tabs and forms
+      tabBtns.forEach((tab) => tab.classList.remove("active"))
+      authForms.forEach((form) => form.classList.remove("active"))
+
+      // Add active class to clicked tab and corresponding form
+      this.classList.add("active")
+      document.getElementById(targetTab + "-form").classList.add("active")
+    })
+  })
+
+  // Password toggle functionality
+  const togglePasswordBtns = document.querySelectorAll(".toggle-password")
+
+  togglePasswordBtns.forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const input = this.parentElement.querySelector("input")
+      const icon = this.querySelector("i")
+
+      if (input.type === "password") {
+        input.type = "text"
+        icon.classList.remove("fa-eye")
+        icon.classList.add("fa-eye-slash")
+      } else {
+        input.type = "password"
+        icon.classList.remove("fa-eye-slash")
+        icon.classList.add("fa-eye")
+      }
+    })
+  })
+
+  // Password strength checker
+  const registerPassword = document.getElementById("registerPassword")
+  const strengthBar = document.querySelector(".strength-fill")
+  const strengthText = document.querySelector(".strength-text")
+
+  if (registerPassword) {
+    registerPassword.addEventListener("input", function () {
+      const password = this.value
+      const strength = checkPasswordStrength(password)
+
+      strengthBar.className = "strength-fill " + strength.class
+      strengthText.textContent = strength.text
+    })
+  }
+
+  function checkPasswordStrength(password) {
+    if (password.length < 6) {
+      return { class: "", text: "Password terlalu pendek" }
+    } else if (password.length < 8) {
+      return { class: "weak", text: "Password lemah" }
+    } else if (password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)) {
+      return { class: "strong", text: "Password kuat" }
+    } else {
+      return { class: "medium", text: "Password sedang" }
     }
+  }
 
-    init() {
-        this.setupEventListeners();
-        this.setupTabSwitching();
-        this.setupPasswordToggle();
-        this.setupPasswordStrength();
-        this.checkAuthStatus();
-    }
+  // Login form submission
+  const loginForm = document.getElementById("loginForm")
 
-    setupEventListeners() {
-        // Login form
-        const loginForm = document.getElementById('loginForm');
-        if (loginForm) {
-            loginForm.addEventListener('submit', (e) => this.handleLogin(e));
-        }
+  if (loginForm) {
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault()
 
-        // Register form
-        const registerForm = document.getElementById('registerForm');
-        if (registerForm) {
-            registerForm.addEventListener('submit', (e) => this.handleRegister(e));
-        }
+      const email = document.getElementById("loginEmail").value
+      const password = document.getElementById("loginPassword").value
+      const rememberMe = document.getElementById("rememberMe").checked
 
-        // Social login buttons
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('social-btn')) {
-                this.handleSocialLogin(e);
-            }
-        });
-    }
+      // Simulate login process
+      showMessage("Sedang memproses login...", "info")
 
-    setupTabSwitching() {
-        const tabButtons = document.querySelectorAll('.tab-btn');
-        const authForms = document.querySelectorAll('.auth-form');
+      setTimeout(() => {
+        // Check if user exists in localStorage
+        const users = JSON.parse(localStorage.getItem("users")) || []
+        const user = users.find((u) => u.email === email && u.password === password)
 
-        tabButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const targetTab = button.dataset.tab;
-                
-                // Remove active class from all tabs and forms
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                authForms.forEach(form => form.classList.remove('active'));
-                
-                // Add active class to clicked tab and corresponding form
-                button.classList.add('active');
-                document.getElementById(`${targetTab}-form`).classList.add('active');
-            });
-        });
-    }
-
-    setupPasswordToggle() {
-        const toggleButtons = document.querySelectorAll('.toggle-password');
-        
-        toggleButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const input = button.parentElement.querySelector('input');
-                const icon = button.querySelector('i');
-                
-                if (input.type === 'password') {
-                    input.type = 'text';
-                    icon.classList.remove('fa-eye');
-                    icon.classList.add('fa-eye-slash');
-                } else {
-                    input.type = 'password';
-                    icon.classList.remove('fa-eye-slash');
-                    icon.classList.add('fa-eye');
-                }
-            });
-        });
-    }
-
-    setupPasswordStrength() {
-        const passwordInput = document.getElementById('registerPassword');
-        const strengthBar = document.querySelector('.strength-fill');
-        const strengthText = document.querySelector('.strength-text');
-        
-        if (passwordInput && strengthBar && strengthText) {
-            passwordInput.addEventListener('input', (e) => {
-                const password = e.target.value;
-                const strength = this.calculatePasswordStrength(password);
-                
-                strengthBar.className = `strength-fill ${strength.level}`;
-                strengthText.textContent = strength.text;
-            });
-        }
-    }
-
-    calculatePasswordStrength(password) {
-        let score = 0;
-        
-        if (password.length >= 8) score++;
-        if (/[a-z]/.test(password)) score++;
-        if (/[A-Z]/.test(password)) score++;
-        if (/[0-9]/.test(password)) score++;
-        if (/[^A-Za-z0-9]/.test(password)) score++;
-        
-        if (score < 3) {
-            return { level: 'weak', text: 'Password lemah' };
-        } else if (score < 5) {
-            return { level: 'medium', text: 'Password sedang' };
-        } else {
-            return { level: 'strong', text: 'Password kuat' };
-        }
-    }
-
-    handleLogin(e) {
-        e.preventDefault();
-        
-        const formData = new FormData(e.target);
-        const email = formData.get('email');
-        const password = formData.get('password');
-        const rememberMe = formData.get('rememberMe');
-        
-        // Validate input
-        if (!email || !password) {
-            this.showMessage('Mohon lengkapi semua field', 'error');
-            return;
-        }
-        
-        // Check credentials
-        const user = this.users.find(u => u.email === email && u.password === password);
-        
         if (user) {
-            // Login successful
-            this.currentUser = {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                phone: user.phone,
-                role: user.role || 'customer',
-                loginTime: new Date().toISOString()
-            };
-            
-            // Save user session
-            localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
-            
-            if (rememberMe) {
-                localStorage.setItem('rememberUser', JSON.stringify({
-                    email: email,
-                    rememberMe: true
-                }));
-            }
-            
-            this.showMessage('Login berhasil! Mengalihkan...', 'success');
-            
-            // Redirect based on role
-            setTimeout(() => {
-                if (user.role === 'admin') {
-                    window.location.href = 'admin-dashboard.html';
-                } else {
-                    window.location.href = 'index.html';
-                }
-            }, 1500);
-            
-        } else {
-            this.showMessage('Email atau password salah', 'error');
-        }
-    }
+          // Login successful
+          const loginData = {
+            user: user,
+            loginTime: new Date().toISOString(),
+            rememberMe: rememberMe,
+          }
 
-    handleRegister(e) {
-        e.preventDefault();
-        
-        const formData = new FormData(e.target);
-        const name = formData.get('name');
-        const email = formData.get('email');
-        const phone = formData.get('phone');
-        const password = formData.get('password');
-        const confirmPassword = formData.get('confirmPassword');
-        const agreeTerms = formData.get('agreeTerms');
-        
-        // Validate input
-        if (!name || !email || !phone || !password || !confirmPassword) {
-            this.showMessage('Mohon lengkapi semua field', 'error');
-            return;
+          localStorage.setItem("currentUser", JSON.stringify(loginData))
+
+          showMessage("Login berhasil! Mengalihkan...", "success")
+
+          setTimeout(() => {
+            // Redirect to dashboard or previous page
+            const returnUrl = new URLSearchParams(window.location.search).get("return") || "pesanan-saya.html"
+            window.location.href = returnUrl
+          }, 1500)
+        } else {
+          showMessage("Email atau password salah!", "error")
         }
-        
-        if (!agreeTerms) {
-            this.showMessage('Anda harus menyetujui syarat dan ketentuan', 'error');
-            return;
-        }
-        
-        if (password !== confirmPassword) {
-            this.showMessage('Password dan konfirmasi password tidak sama', 'error');
-            return;
-        }
-        
-        if (password.length < 8) {
-            this.showMessage('Password minimal 8 karakter', 'error');
-            return;
-        }
-        
-        // Check if email already exists
-        if (this.users.find(u => u.email === email)) {
-            this.showMessage('Email sudah terdaftar', 'error');
-            return;
-        }
-        
-        // Create new user
-        const newUser = {
-            id: `user_${Date.now()}`,
+      }, 1000)
+    })
+  }
+
+  // Register form submission
+  const registerForm = document.getElementById("registerForm")
+
+  if (registerForm) {
+    registerForm.addEventListener("submit", (e) => {
+      e.preventDefault()
+
+      const name = document.getElementById("registerName").value
+      const email = document.getElementById("registerEmail").value
+      const phone = document.getElementById("registerPhone").value
+      const password = document.getElementById("registerPassword").value
+      const confirmPassword = document.getElementById("confirmPassword").value
+      const agreeTerms = document.getElementById("agreeTerms").checked
+
+      // Validation
+      if (password !== confirmPassword) {
+        showMessage("Password dan konfirmasi password tidak sama!", "error")
+        return
+      }
+
+      if (password.length < 6) {
+        showMessage("Password minimal 6 karakter!", "error")
+        return
+      }
+
+      if (!agreeTerms) {
+        showMessage("Anda harus menyetujui syarat dan ketentuan!", "error")
+        return
+      }
+
+      // Check if email already exists
+      const users = JSON.parse(localStorage.getItem("users")) || []
+      if (users.find((u) => u.email === email)) {
+        showMessage("Email sudah terdaftar! Silakan gunakan email lain.", "error")
+        return
+      }
+
+      // Show loading state
+      const submitBtn = registerForm.querySelector('button[type="submit"]')
+      const originalText = submitBtn.textContent
+      submitBtn.textContent = "Mendaftar..."
+      submitBtn.disabled = true
+
+      // Simulate registration process
+      setTimeout(() => {
+        try {
+          // Create new user
+          const newUser = {
+            id: Date.now(),
             name: name,
             email: email,
             phone: phone,
-            password: password, // In production, this should be hashed
-            role: 'customer',
-            status: 'active',
-            createdAt: new Date().toISOString()
-        };
-        
-        // Add to users array
-        this.users.push(newUser);
-        localStorage.setItem('users', JSON.stringify(this.users));
-        
-        // Add to admin data if available
-        if (window.adminDataManager) {
-            const adminData = window.adminDataManager.getData();
-            adminData.users = adminData.users || [];
-            adminData.users.push(newUser);
-            window.adminDataManager.saveData(adminData);
-            
-            // Add notification
-            window.adminDataManager.addNotification({
-                type: 'success',
-                title: 'Pengguna Baru',
-                message: `Pengguna baru terdaftar: ${newUser.name}`,
-                timestamp: new Date().toISOString()
-            });
-        }
-        
-        this.showMessage('Registrasi berhasil! Silakan login', 'success');
-        
-        // Switch to login tab
-        setTimeout(() => {
-            document.querySelector('[data-tab="login"]').click();
-            
-            // Pre-fill login form
-            document.getElementById('loginEmail').value = email;
-        }, 1500);
-    }
+            password: password,
+            registrationDate: new Date().toISOString(),
+            isActive: true,
+            avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=8B4513&color=fff`,
+          }
 
-    handleSocialLogin(e) {
-        const provider = e.target.classList.contains('google') ? 'Google' : 'Facebook';
-        this.showMessage(`Login dengan ${provider} belum tersedia`, 'error');
-    }
+          users.push(newUser)
+          localStorage.setItem("users", JSON.stringify(users))
 
-    checkAuthStatus() {
-        // Check if user is already logged in
-        if (this.currentUser) {
-            // Redirect to appropriate page
-            if (this.currentUser.role === 'admin') {
-                window.location.href = 'admin-dashboard.html';
-            } else {
-                window.location.href = 'index.html';
-            }
-            return;
-        }
-        
-        // Check remember me
-        const rememberedUser = JSON.parse(localStorage.getItem('rememberUser') || 'null');
-        if (rememberedUser && rememberedUser.rememberMe) {
-            document.getElementById('loginEmail').value = rememberedUser.email;
-            document.getElementById('rememberMe').checked = true;
-        }
-    }
+          // Reset form
+          registerForm.reset()
 
-    showMessage(message, type) {
-        // Remove existing messages
-        const existingMessages = document.querySelectorAll('.message');
-        existingMessages.forEach(msg => msg.remove());
-        
-        // Create new message
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${type}`;
-        messageDiv.textContent = message;
-        
-        // Insert message at the top of active form
-        const activeForm = document.querySelector('.auth-form.active');
-        if (activeForm) {
-            activeForm.insertBefore(messageDiv, activeForm.firstChild);
-            
-            // Auto remove after 5 seconds
+          // Show success message
+          showMessage("🎉 Akun berhasil dibuat! Silakan login dengan akun baru Anda.", "success")
+
+          // Reset button
+          submitBtn.textContent = originalText
+          submitBtn.disabled = false
+
+          // Switch to login tab after 2 seconds
+          setTimeout(() => {
+            // Switch tab
+            document.querySelector('[data-tab="login"]').click()
+
+            // Pre-fill email and focus on password
             setTimeout(() => {
-                messageDiv.remove();
-            }, 5000);
+              document.getElementById("loginEmail").value = email
+              document.getElementById("loginPassword").focus()
+
+              // Show helpful message on login form
+              showMessage("✅ Akun sudah siap! Masukkan password untuk login.", "info")
+            }, 300)
+          }, 2000)
+        } catch (error) {
+          console.error("Registration error:", error)
+          showMessage("Terjadi kesalahan saat mendaftar. Silakan coba lagi.", "error")
+
+          // Reset button
+          submitBtn.textContent = originalText
+          submitBtn.disabled = false
         }
+      }, 1000)
+    })
+  }
+
+  // Social login buttons
+  const socialBtns = document.querySelectorAll(".social-btn")
+
+  socialBtns.forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const provider = this.classList.contains("google") ? "Google" : "Facebook"
+      showMessage(`Login dengan ${provider} akan segera tersedia!`, "info")
+    })
+  })
+
+  // Show message function
+  function showMessage(text, type) {
+    // Remove existing messages
+    const existingMessages = document.querySelectorAll(".message")
+    existingMessages.forEach((msg) => msg.remove())
+
+    // Create new message
+    const message = document.createElement("div")
+    message.className = `message ${type}`
+    message.innerHTML = `
+    <div class="message-content">
+      <span class="message-text">${text}</span>
+      <button class="message-close" onclick="this.parentElement.parentElement.remove()">×</button>
+    </div>
+  `
+
+    // Insert message at the top of active form
+    const activeForm = document.querySelector(".auth-form.active")
+    activeForm.insertBefore(message, activeForm.firstChild)
+
+    // Auto remove message after 5 seconds (except for info messages)
+    if (type !== "info") {
+      setTimeout(() => {
+        if (message.parentElement) {
+          message.remove()
+        }
+      }, 5000)
     }
 
-    logout() {
-        this.currentUser = null;
-        localStorage.removeItem('currentUser');
-        localStorage.removeItem('rememberUser');
-        window.location.href = 'login.html';
-    }
+    // Scroll to top to show message
+    activeForm.scrollIntoView({ behavior: "smooth", block: "start" })
+  }
 
-    getCurrentUser() {
-        return this.currentUser;
-    }
+  // Check if user is already logged in
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"))
+  if (currentUser) {
+    // User is already logged in, redirect to dashboard
+    window.location.href = "pesanan-saya.html"
+  }
 
-    isLoggedIn() {
-        return this.currentUser !== null;
-    }
-
-    isAdmin() {
-        return this.currentUser && this.currentUser.role === 'admin';
-    }
-}
-
-// Initialize auth system
-const authSystem = new AuthSystem();
-
-// Make auth system globally available
-window.authSystem = authSystem;
-
-// Enhanced login styles
-const loginStyles = `
-.message {
-    padding: 12px 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    animation: slideDown 0.3s ease;
-}
-
-.message.success {
-    background: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-}
-
-.message.error {
-    background: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.auth-form {
-    animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.input-group input:focus {
-    outline: none;
-    border-color: #c8a97e;
-    background: white;
-    box-shadow: 0 0 0 3px rgba(200, 169, 126, 0.1);
-}
-
-.btn-primary:hover {
-    background: linear-gradient(135deg, #b89669 0%, #a68558 100%);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(200, 169, 126, 0.3);
-}
-
-.social-btn:hover {
-    border-color: #c8a97e;
-    background: #f8f9fa;
-    transform: translateY(-1px);
-}
-
-.tab-btn {
-    transition: all 0.3s ease;
-}
-
-.tab-btn:hover {
-    color: #c8a97e;
-}
-
-.tab-btn.active {
-    color: #c8a97e;
-}
-
-.tab-btn.active::after {
-    content: "";
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: #c8a97e;
-}
-`;
-
-// Add login styles
-const loginStyleSheet = document.createElement('style');
-loginStyleSheet.textContent = loginStyles;
-document.head.appendChild(loginStyleSheet);
+  // Update cart count
+  const cartCount = document.querySelector(".cart-count")
+  if (cartCount) {
+    const count = Number.parseInt(localStorage.getItem("cartCount")) || 0
+    cartCount.textContent = count
+  }
+})

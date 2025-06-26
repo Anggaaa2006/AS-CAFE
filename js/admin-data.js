@@ -1,9 +1,8 @@
-// Enhanced Admin Data Management System with Real-time Web Integration
+// Admin Data Management System
 class AdminDataManager {
     constructor() {
         this.initializeData();
         this.setupEventListeners();
-        this.setupRealTimeSync();
     }
 
     initializeData() {
@@ -22,112 +21,6 @@ class AdminDataManager {
             };
             localStorage.setItem('adminData', JSON.stringify(defaultData));
         }
-        
-        // Sync with web data
-        this.syncWithWebData();
-    }
-
-    syncWithWebData() {
-        // Sync cart data from web
-        const webCart = JSON.parse(localStorage.getItem('cart') || '[]');
-        if (webCart.length > 0) {
-            this.addNotification({
-                type: 'info',
-                title: 'Aktivitas Keranjang',
-                message: `Ada ${webCart.length} item di keranjang pelanggan`,
-                timestamp: new Date().toISOString()
-            });
-        }
-
-        // Sync reservations from web
-        const webReservations = JSON.parse(localStorage.getItem('reservations') || '[]');
-        const adminData = this.getData();
-        
-        // Merge web reservations with admin data
-        webReservations.forEach(reservation => {
-            const exists = adminData.reservations.find(r => r.id === reservation.id);
-            if (!exists) {
-                adminData.reservations.push(reservation);
-            }
-        });
-        
-        this.saveData(adminData);
-    }
-
-    setupRealTimeSync() {
-        // Listen for storage changes from web
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'cart') {
-                this.handleCartChange(e.newValue);
-            } else if (e.key === 'reservations') {
-                this.handleReservationChange(e.newValue);
-            } else if (e.key === 'orders') {
-                this.handleOrderChange(e.newValue);
-            }
-        });
-
-        // Periodic sync every 5 seconds
-        setInterval(() => {
-            this.syncWithWebData();
-        }, 5000);
-    }
-
-    handleCartChange(newCartData) {
-        if (newCartData) {
-            const cart = JSON.parse(newCartData);
-            this.addNotification({
-                type: 'info',
-                title: 'Keranjang Diperbarui',
-                message: `Keranjang sekarang memiliki ${cart.length} item`,
-                timestamp: new Date().toISOString()
-            });
-        }
-    }
-
-    handleReservationChange(newReservationData) {
-        if (newReservationData) {
-            const reservations = JSON.parse(newReservationData);
-            const adminData = this.getData();
-            
-            // Find new reservations
-            reservations.forEach(reservation => {
-                const exists = adminData.reservations.find(r => r.id === reservation.id);
-                if (!exists) {
-                    adminData.reservations.push(reservation);
-                    this.addNotification({
-                        type: 'success',
-                        title: 'Reservasi Baru',
-                        message: `Reservasi baru dari ${reservation.name}`,
-                        timestamp: new Date().toISOString()
-                    });
-                }
-            });
-            
-            this.saveData(adminData);
-        }
-    }
-
-    handleOrderChange(newOrderData) {
-        if (newOrderData) {
-            const orders = JSON.parse(newOrderData);
-            const adminData = this.getData();
-            
-            // Find new orders
-            orders.forEach(order => {
-                const exists = adminData.orders.find(o => o.id === order.id);
-                if (!exists) {
-                    adminData.orders.push(order);
-                    this.addNotification({
-                        type: 'success',
-                        title: 'Pesanan Baru',
-                        message: `Pesanan baru dari ${order.customerName}`,
-                        timestamp: new Date().toISOString()
-                    });
-                }
-            });
-            
-            this.saveData(adminData);
-        }
     }
 
     getDefaultProducts() {
@@ -137,7 +30,7 @@ class AdminDataManager {
                 name: 'Espresso',
                 category: 'coffee',
                 price: 25000,
-                description: 'Kopi hitam kental dengan cita rasa kuat dan aroma yang menggugah selera',
+                description: 'Kopi hitam kental dengan cita rasa kuat',
                 image: '/placeholder.svg?height=200&width=300',
                 status: 'available',
                 ingredients: 'Biji kopi arabica premium',
@@ -154,7 +47,7 @@ class AdminDataManager {
                 name: 'Cappuccino',
                 category: 'coffee',
                 price: 35000,
-                description: 'Espresso dengan steamed milk dan foam yang lembut, perpaduan sempurna',
+                description: 'Espresso dengan steamed milk dan foam yang lembut',
                 image: '/placeholder.svg?height=200&width=300',
                 status: 'available',
                 ingredients: 'Espresso, susu segar, foam',
@@ -171,7 +64,7 @@ class AdminDataManager {
                 name: 'Latte',
                 category: 'coffee',
                 price: 35000,
-                description: 'Espresso dengan susu steamed dan sedikit foam, creamy dan smooth',
+                description: 'Espresso dengan susu steamed dan sedikit foam',
                 image: '/placeholder.svg?height=200&width=300',
                 status: 'available',
                 ingredients: 'Espresso, susu steamed',
@@ -188,7 +81,7 @@ class AdminDataManager {
                 name: 'Americano',
                 category: 'coffee',
                 price: 30000,
-                description: 'Espresso dengan tambahan air panas, untuk pecinta kopi hitam',
+                description: 'Espresso dengan tambahan air panas',
                 image: '/placeholder.svg?height=200&width=300',
                 status: 'available',
                 ingredients: 'Espresso, air panas',
@@ -222,7 +115,7 @@ class AdminDataManager {
                 name: 'Pasta Carbonara',
                 category: 'food',
                 price: 65000,
-                description: 'Pasta dengan saus krim, telur, dan bacon crispy yang menggugah selera',
+                description: 'Pasta dengan saus krim, telur, dan bacon',
                 image: '/placeholder.svg?height=200&width=300',
                 status: 'available',
                 ingredients: 'Pasta, bacon, telur, krim, keju parmesan',
@@ -239,7 +132,7 @@ class AdminDataManager {
                 name: 'Chicken Sandwich',
                 category: 'food',
                 price: 55000,
-                description: 'Sandwich dengan ayam panggang dan sayuran segar, sehat dan lezat',
+                description: 'Sandwich dengan ayam panggang dan sayuran segar',
                 image: '/placeholder.svg?height=200&width=300',
                 status: 'available',
                 ingredients: 'Roti, ayam panggang, selada, tomat, mayo',
@@ -256,7 +149,7 @@ class AdminDataManager {
                 name: 'Tiramisu',
                 category: 'dessert',
                 price: 45000,
-                description: 'Dessert Italia dengan lapisan kopi dan mascarpone yang lembut',
+                description: 'Dessert Italia dengan lapisan kopi dan mascarpone',
                 image: '/placeholder.svg?height=200&width=300',
                 status: 'available',
                 ingredients: 'Ladyfinger, mascarpone, kopi, cokelat',
@@ -378,7 +271,7 @@ class AdminDataManager {
         this.addNotification({
             type: 'info',
             title: 'Aktivitas Keranjang',
-            message: `Item ditambahkan ke keranjang: ${cartData.itemName || 'Item'}`,
+            message: `Item ditambahkan ke keranjang: ${cartData.itemName}`,
             timestamp: new Date().toISOString()
         });
     }
@@ -421,7 +314,6 @@ class AdminDataManager {
     addNotification(notification) {
         const adminData = this.getData();
         notification.id = `notif_${Date.now()}`;
-        notification.read = false;
         adminData.notifications.unshift(notification);
         
         // Keep only last 50 notifications
@@ -459,11 +351,6 @@ class AdminDataManager {
 
     saveData(data) {
         localStorage.setItem('adminData', JSON.stringify(data));
-        
-        // Trigger sync event for web
-        window.dispatchEvent(new CustomEvent('adminDataUpdated', {
-            detail: data
-        }));
     }
 
     // Public methods for accessing data
@@ -502,10 +389,6 @@ class AdminDataManager {
         product.createdAt = new Date().toISOString();
         adminData.products.push(product);
         this.saveData(adminData);
-        
-        // Sync to web menu
-        this.syncProductsToWeb();
-        
         return product;
     }
 
@@ -515,10 +398,6 @@ class AdminDataManager {
         if (index !== -1) {
             adminData.products[index] = { ...adminData.products[index], ...updates };
             this.saveData(adminData);
-            
-            // Sync to web menu
-            this.syncProductsToWeb();
-            
             return adminData.products[index];
         }
         return null;
@@ -528,20 +407,6 @@ class AdminDataManager {
         const adminData = this.getData();
         adminData.products = adminData.products.filter(p => p.id !== id);
         this.saveData(adminData);
-        
-        // Sync to web menu
-        this.syncProductsToWeb();
-    }
-
-    syncProductsToWeb() {
-        // Update web menu with admin products
-        const products = this.getProducts();
-        localStorage.setItem('webMenuProducts', JSON.stringify(products));
-        
-        // Trigger web menu update
-        window.dispatchEvent(new CustomEvent('menuProductsUpdated', {
-            detail: products
-        }));
     }
 
     updateOrderStatus(orderId, status) {
@@ -551,15 +416,6 @@ class AdminDataManager {
             order.status = status;
             order.updatedAt = new Date().toISOString();
             this.saveData(adminData);
-            
-            // Sync to web orders
-            const webOrders = JSON.parse(localStorage.getItem('orders') || '[]');
-            const webOrderIndex = webOrders.findIndex(o => o.id === orderId);
-            if (webOrderIndex !== -1) {
-                webOrders[webOrderIndex].status = status;
-                webOrders[webOrderIndex].updatedAt = new Date().toISOString();
-                localStorage.setItem('orders', JSON.stringify(webOrders));
-            }
             
             // Add notification
             this.addNotification({
